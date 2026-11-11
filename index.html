@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#08090c">
+    <title>GTA SA-MP | Modern Radial Menu</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#E5092A',
+                            redBright: '#FF2948',
+                            redDark: '#79091B',
+                            black: '#08090C',
+                            panel: '#111318',
+                            white: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --black: #08090c;
+            --panel: #111318;
+            --panel-soft: rgba(19, 21, 27, .96);
+            --red: #e5092a;
+            --red-bright: #ff2948;
+            --white: #f7f7f8;
+            --muted: rgba(247,247,248,.58);
+            --line: rgba(255,255,255,.13);
+        }
+
+        * { box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; margin: 0; }
+        body {
+            overflow: hidden;
+            background: transparent !important;
+            color: var(--white);
+            font-family: Inter, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Local fallback: hide the HTML overlay even when no native bridge exists. */
+        body.radial-menu-closed main,
+        body.radial-menu-closed .hud-overlay,
+        body.radial-menu-closed .hud-grid,
+        body.radial-menu-closed #inline-settings-panel {
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        /* Remove WebView/CEF's default rectangular tap and focus overlay.
+           Keyboard focus is re-enabled explicitly through .keyboard-navigation. */
+        button, [role="button"], .slice-group,
+        button *, [role="button"] *, .slice-group * {
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none;
+        }
+        button {
+            font: inherit;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            outline: none;
+        }
+        button:focus, button:focus-visible,
+        [role="button"]:focus, [role="button"]:focus-visible,
+        .slice-group:focus, .slice-group:focus-visible {
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        html.keyboard-navigation button:focus-visible,
+        html.keyboard-navigation [role="button"]:focus-visible,
+        html.keyboard-navigation .slice-group:focus-visible {
+            outline: 2px solid #fff !important;
+            outline-offset: 4px;
+        }
+        ::selection { background: transparent; color: inherit; }
+
+        .hud-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at center, rgba(229,9,42,.105) 0%, rgba(8,9,12,.25) 42%, rgba(0,0,0,.76) 100%),
+                radial-gradient(circle at center, transparent 0%, rgba(0,0,0,.2) 72%);
+        }
+        .hud-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: .13;
+            background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+            background-size: 34px 34px;
+            mask-image: radial-gradient(circle at center, black 0%, transparent 76%);
+        }
+        main {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+        }
+
+        /* Shared menu motion and surfaces */
+        .menu-enter { animation: menuEnter .25s cubic-bezier(.2,.8,.2,1) both; }
+        @keyframes menuEnter {
+            from { opacity: 0; filter: blur(2px); }
+            to { opacity: 1; filter: blur(0); }
+        }
+        .soft-pulse { animation: softPulse 2.8s ease-in-out infinite; }
+        @keyframes softPulse {
+            0%, 100% { box-shadow: 0 0 0 1px rgba(229,9,42,.45), 0 0 20px rgba(229,9,42,.16); }
+            50% { box-shadow: 0 0 0 1px rgba(255,41,72,.8), 0 0 31px rgba(229,9,42,.36); }
+        }
+        .glow-red { filter: drop-shadow(0 0 13px rgba(229,9,42,.4)); }
+        .glow-text { text-shadow: 0 0 12px rgba(229,9,42,.45); }
+
+        /* Circle layout */
+        #layout-circle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: min(90vw, 82vh, 520px);
+            aspect-ratio: 1 / 1;
+            flex: 0 0 auto;
+        }
+        .circle-outer-ring {
+            position: absolute;
+            inset: 1.5%;
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 50%;
+            box-shadow: 0 0 26px rgba(229,9,42,.23), inset 0 0 28px rgba(229,9,42,.045);
+            pointer-events: none;
+        }
+        .circle-outer-ring::before, .circle-outer-ring::after {
+            content: '';
+            position: absolute;
+            inset: 7px;
+            border: 1px dashed rgba(255,255,255,.13);
+            border-radius: 50%;
+        }
+        .circle-outer-ring::after {
+            inset: -7px;
+            border: 1px solid rgba(229,9,42,.24);
+        }
+        #circle-menu-svg { width: 100%; height: 100%; overflow: visible; }
+        .slice-path {
+            fill: rgba(15,17,22,.96);
+            stroke: rgba(255,255,255,.73);
+            stroke-width: 1.6;
+            transition: fill .18s ease, stroke .18s ease, filter .18s ease;
+            cursor: pointer;
+        }
+        .slice-group:hover .slice-path, .slice-group:focus-visible .slice-path {
+            fill: url(#redGradient);
+            stroke: #fff;
+            filter: drop-shadow(0 0 13px rgba(229,9,42,.85));
+        }
+        .slice-group:active .slice-path { fill: #8e0b20; }
+        .slice-fo { pointer-events: none; }
+        .slice-content {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0,0,0,.75);
+        }
+        .slice-content i { font-size: clamp(15px, 2.6vw, 22px); color: #fff; }
+        .slice-content span {
+            max-width: 100%;
+            font-family: Rajdhani, sans-serif;
+            font-size: clamp(10px, 1.55vw, 13px);
+            font-weight: 800;
+            letter-spacing: .075em;
+            line-height: 1;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* Center brand hub: the supplied ETH… STATE mark is shown in full */
+        .center-hub {
+            position: absolute;
+            z-index: 30;
+            display: flex;
+            width: clamp(108px, 31%, 172px);
+            aspect-ratio: 1 / 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 7px 8px 6px;
+            border: 1.5px solid rgba(255,41,72,.92);
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 25%, #202127 0%, #0b0c10 68%);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 0 5px rgba(229,9,42,.07), 0 0 30px rgba(229,9,42,.26), inset 0 0 20px rgba(229,9,42,.09);
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+        .center-hub:hover { transform: scale(1.035); border-color: #fff; box-shadow: 0 0 0 5px rgba(229,9,42,.1), 0 0 34px rgba(229,9,42,.42); }
+        .hub-logo-wrap {
+            display: flex;
+            width: 73%;
+            aspect-ratio: 1 / 1;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+        }
+        .center-hub-logo { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 7px rgba(229,9,42,.35)); pointer-events: none; }
+        .hub-logo-wrap i { font-size: clamp(21px, 4vw, 29px); color: #fff; }
+        .hub-title { font-family: Rajdhani, sans-serif; font-size: clamp(10px, 1.8vw, 14px); font-weight: 800; letter-spacing: .11em; line-height: 1; }
+        .hub-hint { padding: 3px 6px; border-radius: 5px; background: var(--red); color: #fff; font: 800 7px/1.1 Inter, sans-serif; letter-spacing: .06em; white-space: nowrap; }
+
+        /* Hexagon layout */
+        #layout-hexagon {
+            position: relative;
+            display: flex;
+            width: min(92vw, 82vh, 540px);
+            aspect-ratio: 1 / 1;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+        #hex-connector-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+        #hex-nodes-container { position: relative; z-index: 2; width: 100%; height: 100%; }
+        .hex-node {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5px;
+            border: 0;
+            background: linear-gradient(145deg, rgba(255,255,255,.88), #ff2948 48%, rgba(105,8,25,.95));
+            clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+            color: #fff;
+            cursor: pointer;
+            transform: translate(-50%,-50%);
+            filter: drop-shadow(0 7px 15px rgba(0,0,0,.28)) drop-shadow(0 0 9px rgba(229,9,42,.16));
+            transition: transform .18s ease, filter .18s ease;
+        }
+        .hex-node:hover, .hex-node:focus-visible {
+            transform: translate(-50%,-50%) scale(1.08);
+            filter: drop-shadow(0 8px 17px rgba(0,0,0,.32)) drop-shadow(0 0 13px rgba(229,9,42,.58));
+        }
+        .hex-node:active { transform: translate(-50%,-50%) scale(.97); }
+        .hex-node-inner {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 8px 4px;
+            overflow: hidden;
+            clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+            background: linear-gradient(150deg, rgba(29,31,38,.99), rgba(9,10,14,.99));
+            color: #fff;
+            transition: background .18s ease;
+        }
+        .hex-node:hover .hex-node-inner, .hex-node:focus-visible .hex-node-inner { background: linear-gradient(150deg, #c40d2b, #69091b); }
+        .hex-node-inner i {
+            display: flex;
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,41,72,.72);
+            border-radius: 10px;
+            background: rgba(229,9,42,.16);
+            color: #ff526a;
+            font-size: clamp(15px, 2.7vw, 19px);
+            transition: color .18s ease, background .18s ease, border-color .18s ease;
+        }
+        .hex-node:hover .hex-node-inner i, .hex-node:focus-visible .hex-node-inner i {
+            border-color: rgba(255,255,255,.58);
+            background: rgba(255,255,255,.14);
+            color: #fff;
+        }
+        .hex-node-inner span {
+            max-width: 100%;
+            color: #fff;
+            font: 800 clamp(10px, 1.65vw, 12px)/1 Rajdhani, sans-serif;
+            letter-spacing: .07em;
+            text-align: center;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .hex-center-hub { width: clamp(108px, 29%, 156px); border-radius: 26px; aspect-ratio: 1 / 1; }
+        .hex-center-hub .hub-logo-wrap { width: 72%; }
+        .hex-center-hub .hub-title { font-size: clamp(10px, 1.8vw, 14px); }
+
+        /* Arc / floating dock layout */
+        #layout-arc {
+            display: flex;
+            width: min(96vw, 920px);
+            max-height: 94vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        #arc-items-container {
+            position: relative;
+            width: 100%;
+            height: min(58vh, 430px);
+            min-height: 270px;
+        }
+        .arc-item {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            width: clamp(82px, 10vw, 104px);
+            height: clamp(88px, 11vw, 112px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 6px;
+            border: 1px solid rgba(255,255,255,.17);
+            border-radius: 17px;
+            background: linear-gradient(150deg, rgba(29,31,38,.98), rgba(9,10,14,.98));
+            box-shadow: 0 10px 28px rgba(0,0,0,.28), 0 0 14px rgba(229,9,42,.13);
+            color: #fff;
+            cursor: pointer;
+            transform: translate(-50%,-50%);
+            transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+        }
+        .arc-item:hover, .arc-item:focus-visible { z-index: 5; transform: translate(-50%,-58%) scale(1.07); border-color: var(--red-bright); background: linear-gradient(150deg, #c40d2b, #69091b); box-shadow: 0 12px 28px rgba(0,0,0,.3), 0 0 22px rgba(229,9,42,.34); }
+        .arc-icon {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,41,72,.7);
+            border-radius: 12px;
+            background: rgba(229,9,42,.16);
+            color: #ff526a;
+            font-size: 18px;
+        }
+        .arc-item:hover .arc-icon, .arc-item:focus-visible .arc-icon { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.15); color: #fff; }
+        .arc-item-label { font: 800 12px/1 Rajdhani, sans-serif; letter-spacing: .07em; text-align: center; text-transform: uppercase; white-space: nowrap; }
+        .arc-item small { color: rgba(255,255,255,.47); font: 700 7px/1 Inter, sans-serif; letter-spacing: .08em; }
+        #arc-items-container.is-compact {
+            display: grid;
+            height: auto;
+            min-height: 0;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 9px;
+            padding: 4px;
+        }
+        #arc-items-container.is-compact .arc-item {
+            position: relative;
+            left: auto !important;
+            top: auto !important;
+            width: 100%;
+            height: clamp(74px, 22vw, 94px);
+            min-width: 0;
+            padding: 7px 3px;
+            border-radius: 13px;
+            transform: none;
+            gap: 5px;
+        }
+        #arc-items-container.is-compact .arc-item:hover,
+        #arc-items-container.is-compact .arc-item:focus-visible { transform: scale(1.035); }
+        #arc-items-container.is-compact .arc-icon { width: 32px; height: 32px; font-size: 15px; border-radius: 10px; }
+        #arc-items-container.is-compact .arc-item-label { font-size: 11px; }
+
+        .arc-close-button {
+            display: flex;
+            min-height: 52px;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            padding: 7px 19px;
+            border: 1px solid rgba(255,41,72,.83);
+            border-radius: 15px;
+            background: linear-gradient(145deg, rgba(25,27,33,.98), rgba(7,8,11,.98));
+            color: #fff;
+            box-shadow: 0 0 20px rgba(229,9,42,.19);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+        .arc-close-button:hover { transform: translateY(-2px); border-color: #fff; box-shadow: 0 0 25px rgba(229,9,42,.35); }
+        .arc-close-button .hub-logo-wrap { width: 58px; height: 58px; flex: 0 0 58px; border: 0; border-radius: 0; background: transparent; overflow: visible; }
+        .arc-close-button .center-hub-logo { width: 100%; height: 100%; }
+        .arc-close-button .hub-logo-wrap i { font-size: 24px; }
+        .arc-close-button .hub-title { font-size: 15px; }
+        .arc-close-button .hub-hint { display: block; margin-top: 3px; background: transparent; color: rgba(255,255,255,.55); padding: 0; text-align: left; }
+
+        /* Settings modal */
+        #inline-settings-panel {
+            position: fixed;
+            z-index: 50;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(0,0,0,.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .22s ease;
+        }
+        #inline-settings-panel.is-open { opacity: 1; pointer-events: auto; }
+        .settings-card {
+            width: min(100%, 460px);
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: clamp(17px, 4vw, 25px);
+            border: 1px solid rgba(255,41,72,.65);
+            border-radius: 23px;
+            background: linear-gradient(145deg, rgba(24,26,32,.99), rgba(7,8,11,.99));
+            box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 35px rgba(229,9,42,.18);
+        }
+        .settings-title { font: 800 21px/1 Rajdhani, sans-serif; letter-spacing: .07em; color: #ff405c; }
+        .shape-option {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 13px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 14px;
+            background: rgba(255,255,255,.035);
+            text-align: left;
+            cursor: pointer;
+            transition: border-color .18s ease, background .18s ease, transform .18s ease;
+        }
+        .shape-option:hover { transform: translateY(-1px); border-color: rgba(255,41,72,.65); }
+        .shape-option.active { border-color: var(--red-bright); background: rgba(229,9,42,.12); box-shadow: inset 0 0 18px rgba(229,9,42,.06); }
+        .shape-option-title { font: 800 14px/1.1 Rajdhani, sans-serif; color: #fff; }
+        .shape-option-desc { margin-top: 4px; font: 500 10px/1.35 Inter, sans-serif; color: rgba(255,255,255,.48); }
+        .settings-action {
+            width: 100%;
+            min-height: 45px;
+            border: 1px solid rgba(255,41,72,.8);
+            border-radius: 13px;
+            background: linear-gradient(120deg, #e5092a, #a90924);
+            color: #fff;
+            font: 800 14px Rajdhani, sans-serif;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 7px 20px rgba(229,9,42,.2);
+        }
+        .settings-action:hover { filter: brightness(1.12); }
+        .settings-toggle {
+            min-width: 64px;
+            padding: 7px 12px;
+            border-radius: 9px;
+            background: var(--red);
+            color: #fff;
+            font: 800 11px Inter, sans-serif;
+            cursor: pointer;
+        }
+        .settings-toggle.off { background: #383b43; }
+
+        .hidden { display: none !important; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+
+        @media (max-width: 640px) {
+            main { padding: 8px; }
+            #layout-circle { width: min(92vw, 78vh, 520px); }
+            #layout-hexagon { width: min(92vw, 76vh, 540px); }
+            #layout-arc { width: min(96vw, 500px); gap: 9px; }
+            #arc-items-container:not(.is-compact) { height: min(56vh, 350px); }
+            .settings-card { max-height: 88vh; }
+        }
+        @media (max-width: 380px) {
+            .center-hub { width: clamp(102px, 31%, 154px); padding: 6px 6px 5px; }
+            .center-hub .hub-logo-wrap { width: 63%; }
+            .hex-center-hub .hub-logo-wrap { width: 63%; }
+            .hub-title { font-size: 10px; }
+            .hub-hint { font-size: 6px; padding: 2px 4px; }
+            #arc-items-container.is-compact { gap: 7px; }
+            #arc-items-container.is-compact .arc-item-label { font-size: 10px; }
+            .arc-close-button .hub-logo-wrap { width: 50px; height: 50px; flex-basis: 50px; }
+        }
+        @media (max-height: 430px) and (orientation: landscape) {
+            #layout-circle { width: min(78vh, 76vw, 430px); }
+            #layout-hexagon { width: min(80vh, 76vw, 430px); }
+            #arc-items-container.is-compact .arc-item { height: 70px; }
+            #arc-items-container.is-compact .arc-icon { width: 27px; height: 27px; font-size: 13px; }
+            #layout-arc { max-height: 96vh; }
+            #arc-items-container:not(.is-compact) { height: 68vh; min-height: 220px; }
+            .settings-card { max-height: 92vh; }
+        }
+        /* Adaptive sizing for phones, tablets, laptops and large PC displays. */
+        #layout-circle, #layout-hexagon {
+            width: min(92vw, 82vh, 540px);
+            max-width: calc(100vw - 16px);
+        }
+        #layout-arc {
+            width: min(calc(100vw - 24px), 1040px);
+            max-width: 100%;
+            padding-inline: clamp(2px, 1.5vw, 14px);
+        }
+        #arc-items-container:not(.is-compact) {
+            width: 100%;
+            height: min(58vh, 440px);
+            min-height: 250px;
+        }
+        .arc-item {
+            width: clamp(68px, 8.4vw, 108px);
+            height: clamp(74px, 9.2vw, 116px);
+        }
+        #arc-items-container.is-compact {
+            width: 100%;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(6px, 1.8vw, 12px);
+            padding: clamp(2px, 1vw, 6px);
+        }
+        #arc-items-container.is-compact .arc-item {
+            height: clamp(68px, 17vw, 96px);
+            min-height: 0;
+        }
+        .hex-node-inner {
+            gap: var(--node-gap, 7px);
+            padding: 2px;
+        }
+        .hex-node-inner i {
+            width: var(--node-icon-size, 34px);
+            height: var(--node-icon-size, 34px);
+            flex: 0 0 var(--node-icon-size, 34px);
+            font-size: var(--node-icon-font, 19px);
+            border-radius: var(--node-icon-radius, 10px);
+        }
+        .hex-node-inner span {
+            font-size: var(--node-font-size, 12px);
+            letter-spacing: .045em;
+        }
+        .hex-center-hub { width: clamp(84px, 29%, 156px); }
+
+        /* Prefer dynamic viewport units where the embedded browser supports them. */
+        @supports (height: 100dvh) {
+            #layout-circle { width: min(92vw, 82dvh, 540px); }
+            #layout-hexagon { width: min(92vw, 82dvh, 540px); }
+            #layout-arc { max-height: 94dvh; }
+            #arc-items-container:not(.is-compact) { height: min(58dvh, 440px); }
+        }
+
+        @supports (padding: max(0px)) {
+            main {
+                padding-top: max(6px, env(safe-area-inset-top));
+                padding-right: max(6px, env(safe-area-inset-right));
+                padding-bottom: max(6px, env(safe-area-inset-bottom));
+                padding-left: max(6px, env(safe-area-inset-left));
+            }
+        }
+        @media (max-width: 700px), (max-height: 460px) and (max-width: 960px) {
+            main { padding: 6px; }
+            #layout-arc { width: min(calc(100vw - 16px), 560px); gap: 8px; }
+            #arc-items-container.is-compact .arc-item { border-radius: 12px; padding: 6px 2px; gap: 5px; }
+            #arc-items-container.is-compact .arc-icon { width: clamp(26px, 8vw, 36px); height: clamp(26px, 8vw, 36px); font-size: clamp(13px, 3.6vw, 16px); }
+            #arc-items-container.is-compact .arc-item-label { font-size: clamp(9px, 2.8vw, 12px); }
+            .arc-close-button { min-height: 46px; padding: 5px 14px; }
+            .arc-close-button .hub-logo-wrap { width: 48px; height: 48px; flex-basis: 48px; }
+        }
+        @media (max-width: 380px) {
+            #layout-circle, #layout-hexagon { width: min(calc(100vw - 14px), 78vh, 540px); }
+            .center-hub { width: clamp(84px, 31%, 118px); padding: 5px; }
+            .center-hub .hub-logo-wrap { width: 68%; }
+            .hex-center-hub { width: clamp(82px, 29%, 112px); }
+            .hub-title { font-size: 9px; }
+            .hub-hint { font-size: 6px; padding: 2px 4px; }
+            #arc-items-container.is-compact { gap: 6px; }
+        }
+        @media (max-height: 430px) and (orientation: landscape) {
+            #layout-circle, #layout-hexagon { width: min(82vh, 76vw, 440px); }
+            #layout-arc { max-height: 96vh; }
+            #arc-items-container:not(.is-compact) { height: 66vh; min-height: 190px; }
+            #arc-items-container.is-compact .arc-item { height: 64px; }
+            #arc-items-container.is-compact .arc-icon { width: 25px; height: 25px; }
+            .settings-card { max-height: 92vh; }
+        }
+
+        /* Touch devices: do not leave hover/focus artwork stuck after a tap. */
+        @media (hover: none), (pointer: coarse) {
+            .slice-group:hover .slice-path {
+                fill: rgba(15,17,22,.96);
+                stroke: rgba(255,255,255,.73);
+                filter: none;
+            }
+            .hex-node:hover {
+                transform: translate(-50%,-50%);
+                filter: drop-shadow(0 7px 15px rgba(0,0,0,.28)) drop-shadow(0 0 9px rgba(229,9,42,.16));
+            }
+            .hex-node:hover .hex-node-inner { background: linear-gradient(150deg, rgba(29,31,38,.99), rgba(9,10,14,.99)); }
+            .hex-node:hover .hex-node-inner i {
+                border-color: rgba(255,41,72,.72);
+                background: rgba(229,9,42,.16);
+                color: #ff526a;
+            }
+            .arc-item:hover {
+                z-index: 3;
+                transform: translate(-50%,-50%);
+                border-color: rgba(255,255,255,.17);
+                background: linear-gradient(150deg, rgba(29,31,38,.98), rgba(9,10,14,.98));
+                box-shadow: 0 10px 28px rgba(0,0,0,.28), 0 0 14px rgba(229,9,42,.13);
+            }
+            #arc-items-container.is-compact .arc-item:hover { transform: none; }
+            .arc-item:hover .arc-icon {
+                border-color: rgba(255,41,72,.7);
+                background: rgba(229,9,42,.16);
+                color: #ff526a;
+            }
+            .center-hub:hover {
+                transform: none;
+                border-color: rgba(255,41,72,.92);
+                box-shadow: 0 0 0 5px rgba(229,9,42,.07), 0 0 30px rgba(229,9,42,.26), inset 0 0 20px rgba(229,9,42,.09);
+            }
+            .arc-close-button:hover {
+                transform: none;
+                border-color: rgba(255,41,72,.83);
+                box-shadow: 0 0 20px rgba(229,9,42,.19);
+            }
+        }
+
+        /* Some Android CEF builds keep a synthetic :hover/:focus after touch.
+           The class is set by touchstart/pointerdown and suppresses every tile
+           highlight that can look like a rectangular selection box. */
+        html.touch-input .slice-group:hover .slice-path,
+        html.touch-input .slice-group:focus .slice-path,
+        html.touch-input .slice-group:focus-visible .slice-path {
+            fill: rgba(15,17,22,.96) !important;
+            stroke: rgba(255,255,255,.73) !important;
+            filter: none !important;
+        }
+        html.touch-input .hex-node:hover,
+        html.touch-input .hex-node:focus,
+        html.touch-input .hex-node:focus-visible {
+            transform: translate(-50%,-50%) !important;
+            filter: drop-shadow(0 7px 15px rgba(0,0,0,.28)) drop-shadow(0 0 9px rgba(229,9,42,.16)) !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        html.touch-input .hex-node:hover .hex-node-inner,
+        html.touch-input .hex-node:focus .hex-node-inner,
+        html.touch-input .hex-node:focus-visible .hex-node-inner {
+            background: linear-gradient(150deg, rgba(29,31,38,.99), rgba(9,10,14,.99)) !important;
+        }
+        html.touch-input .hex-node:hover .hex-node-inner i,
+        html.touch-input .hex-node:focus .hex-node-inner i,
+        html.touch-input .hex-node:focus-visible .hex-node-inner i {
+            border-color: rgba(255,41,72,.72) !important;
+            background: rgba(229,9,42,.16) !important;
+            color: #ff526a !important;
+        }
+        html.touch-input .arc-item:hover,
+        html.touch-input .arc-item:focus,
+        html.touch-input .arc-item:focus-visible {
+            z-index: 3 !important;
+            transform: translate(-50%,-50%) !important;
+            border-color: rgba(255,255,255,.17) !important;
+            background: linear-gradient(150deg, rgba(29,31,38,.98), rgba(9,10,14,.98)) !important;
+            box-shadow: 0 10px 28px rgba(0,0,0,.28), 0 0 14px rgba(229,9,42,.13) !important;
+            outline: none !important;
+        }
+        html.touch-input #arc-items-container.is-compact .arc-item:hover,
+        html.touch-input #arc-items-container.is-compact .arc-item:focus,
+        html.touch-input #arc-items-container.is-compact .arc-item:focus-visible {
+            transform: none !important;
+        }
+        html.touch-input .arc-item:hover .arc-icon,
+        html.touch-input .arc-item:focus .arc-icon,
+        html.touch-input .arc-item:focus-visible .arc-icon {
+            border-color: rgba(255,41,72,.7) !important;
+            background: rgba(229,9,42,.16) !important;
+            color: #ff526a !important;
+        }
+        html.touch-input .center-hub:hover,
+        html.touch-input .center-hub:focus,
+        html.touch-input .arc-close-button:hover,
+        html.touch-input .arc-close-button:focus {
+            outline: none !important;
+            transform: none !important;
+        }
+
+        /* LANDSCAPE-FIRST RESPONSIVE STAGE
+           On portrait phones, rotate the complete HUD canvas clockwise so the
+           menu always uses a landscape work area. Native game landscape screens
+           and desktop browsers remain unrotated. */
+        #layout-circle,
+        #layout-hexagon {
+            width: min(82vmin, 540px);
+            max-width: none;
+            flex: 0 0 auto;
+        }
+
+        #layout-arc {
+            width: min(96vmax, 1040px);
+            max-width: none;
+            max-height: 94vmin;
+            gap: clamp(7px, 1.6vmin, 14px);
+            padding-inline: clamp(6px, 1.5vmin, 16px);
+        }
+
+        #arc-items-container:not(.is-compact) {
+            width: 100%;
+            height: min(58vmin, 440px);
+            min-height: min(36vmin, 250px);
+        }
+
+        #arc-items-container.is-compact {
+            width: 100%;
+            height: auto;
+            min-height: 0;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: clamp(6px, 1.5vmin, 12px);
+            padding: clamp(3px, .8vmin, 8px);
+        }
+
+        #arc-items-container.is-compact .arc-item {
+            width: 100%;
+            height: clamp(64px, 18vmin, 94px);
+            min-width: 0;
+            min-height: 0;
+            padding: 6px 3px;
+            gap: clamp(4px, 1vmin, 7px);
+            border-radius: 13px;
+            transform: none;
+        }
+
+        #arc-items-container.is-compact .arc-item-label {
+            font-size: clamp(10px, 1.7vmin, 13px);
+            white-space: nowrap;
+        }
+
+        #arc-items-container.is-compact .arc-icon {
+            width: clamp(27px, 7vmin, 38px);
+            height: clamp(27px, 7vmin, 38px);
+            font-size: clamp(13px, 3.4vmin, 17px);
+        }
+
+        .settings-card {
+            width: min(460px, calc(100% - 20px));
+            max-height: 88vmin;
+        }
+
+        #inline-settings-panel { padding: min(16px, 3vmin); }
+
+        @media (orientation: portrait) {
+            html, body { overflow: hidden; }
+            body {
+                position: fixed;
+                top: 0;
+                left: 100vw;
+                width: 100vh;
+                height: 100vw;
+                max-width: none;
+                max-height: none;
+                transform: rotate(90deg);
+                transform-origin: top left;
+            }
+            main {
+                width: 100%;
+                height: 100%;
+                min-width: 0;
+                min-height: 0;
+                padding: 6px;
+            }
+            .hud-overlay, .hud-grid { position: fixed; inset: 0; }
+            #layout-circle, #layout-hexagon { width: min(82vmin, 540px); }
+            #layout-arc { width: min(96vh, 1040px); max-height: 94vw; }
+            #arc-items-container:not(.is-compact) {
+                height: min(58vw, 300px);
+                min-height: min(36vw, 190px);
+            }
+            #arc-items-container.is-compact { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .settings-card { max-height: 88vw; }
+        }
+
+        @media (max-width: 700px) and (orientation: landscape) {
+            main { padding: 6px; }
+            #layout-circle, #layout-hexagon { width: min(82vmin, 540px); }
+            #layout-arc { width: min(96vw, 1040px); }
+            #arc-items-container.is-compact { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+
+        @media (max-height: 520px) and (orientation: landscape) {
+            #layout-arc { max-height: 96vh; }
+            #arc-items-container:not(.is-compact) {
+                height: min(58vh, 330px);
+                min-height: min(38vh, 190px);
+            }
+            #arc-items-container.is-compact .arc-item { height: clamp(60px, 18vh, 86px); }
+            .settings-card { max-height: 90vh; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hud-overlay"></div>
+    <div class="hud-grid"></div>
+
+    <main>
+        <!-- LAYOUT 1: CIRCLE -->
+        <section id="layout-circle" class="menu-enter" aria-label="Radial circle menu">
+            <div class="circle-outer-ring"></div>
+            <svg id="circle-menu-svg" viewBox="-260 -260 520 520" class="glow-red" role="group" aria-label="Menu items">
+                <defs>
+                    <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff2948" />
+                        <stop offset="100%" stop-color="#85091e" />
+                    </linearGradient>
+                </defs>
+                <g id="circle-slices-group"></g>
+            </svg>
+            <button id="center-hub-circle" class="center-hub soft-pulse" type="button" onclick="handleCenterClick()" aria-label="Close radial menu">
+                <span class="hub-logo-wrap">
+                    <img id="center-hub-logo-circle" class="center-hub-logo" src="assets/logo.png" alt="Logo" draggable="false">
+                    <i id="center-hub-icon-circle" class="fa-solid fa-xmark hidden" aria-hidden="true"></i>
+                </span>
+                <span id="center-hub-hint-circle" class="hub-hint">CLOSE</span>
+            </button>
+        </section>
+
+        <!-- LAYOUT 2: HEXAGON -->
+        <section id="layout-hexagon" class="hidden menu-enter" aria-label="Hexagon menu">
+            <svg id="hex-connector-svg" viewBox="0 0 540 540" aria-hidden="true">
+                <defs>
+                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity=".85" />
+                        <stop offset="100%" stop-color="#ff2948" stop-opacity=".7" />
+                    </linearGradient>
+                </defs>
+                <g id="hex-connector-lines"></g>
+            </svg>
+            <div id="hex-nodes-container"></div>
+            <button id="center-hub-hexagon" class="center-hub hex-center-hub soft-pulse" type="button" onclick="handleCenterClick()" aria-label="Close radial menu">
+                <span class="hub-logo-wrap">
+                    <img id="center-hub-logo-hexagon" class="center-hub-logo" src="assets/logo.png" alt="Logo" draggable="false">
+                    <i id="center-hub-icon-hexagon" class="fa-solid fa-xmark hidden" aria-hidden="true"></i>
+                </span>
+            </button>
+        </section>
+
+        <!-- LAYOUT 3: ARC / FLOATING DOCK -->
+        <section id="layout-arc" class="hidden menu-enter" aria-label="Floating dock menu">
+            <div id="arc-items-container"></div>
+            <button type="button" class="arc-close-button" onclick="handleCenterClick()" aria-label="Close radial menu">
+                <span class="hub-logo-wrap">
+                    <img id="center-hub-logo-arc" class="center-hub-logo" src="assets/logo.png" alt="Logo" draggable="false">
+                    <i id="center-hub-icon-arc" class="fa-solid fa-xmark hidden" aria-hidden="true"></i>
+                </span>
+                <span class="text-left">
+
+                </span>
+            </button>
+        </section>
+    </main>
+
+    <!-- SETTINGS MODAL -->
+    <div id="inline-settings-panel" aria-hidden="true">
+        <div class="settings-card">
+            <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-red/40 bg-brand-red/10 text-brand-red">
+                        <i class="fa-solid fa-sliders text-lg"></i>
+                    </span>
+                    <div>
+                        <h3 class="settings-title uppercase">RADIAL SETTINGS</h3>
+                        <p class="mt-1 text-[10px] font-semibold tracking-wider text-white/40">ATUR TAMPILAN MENU</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeSettingsModal()" class="flex h-9 w-9 items-center justify-center rounded-lg text-white/55 transition hover:bg-white/5 hover:text-brand-red" aria-label="Tutup pengaturan">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="mb-3 text-[10px] font-extrabold tracking-[.16em] text-white/45">PILIH LAYOUT</div>
+            <div class="space-y-2">
+                <button type="button" onclick="selectShape('circle')" id="opt-shape-circle" class="shape-option active">
+                    <span class="flex items-center gap-3">
+                        <i class="fa-solid fa-circle-notch w-6 text-center text-xl text-brand-red"></i>
+                        <span>
+                            <span class="shape-option-title block">Classic Circle</span>
+                            <span class="shape-option-desc block">Menu melingkar dengan sektor radial.</span>
+                        </span>
+                    </span>
+                    <i class="status-indicator fa-solid fa-circle-check text-brand-red"></i>
+                </button>
+                <button type="button" onclick="selectShape('hexagon')" id="opt-shape-hexagon" class="shape-option">
+                    <span class="flex items-center gap-3">
+                        <i class="fa-solid fa-cubes-stacked w-6 text-center text-xl text-brand-red"></i>
+                        <span>
+                            <span class="shape-option-title block">Sci-Fi Hexagon</span>
+                            <span class="shape-option-desc block">Node heksagonal dengan garis penghubung.</span>
+                        </span>
+                    </span>
+                    <i class="status-indicator fa-solid fa-circle-check hidden text-brand-red"></i>
+                </button>
+                <button type="button" onclick="selectShape('arc')" id="opt-shape-arc" class="shape-option">
+                    <span class="flex items-center gap-3">
+                        <i class="fa-solid fa-grip w-6 text-center text-xl text-brand-red"></i>
+                        <span>
+                            <span class="shape-option-title block">Floating Dock</span>
+                            <span class="shape-option-desc block">Kartu menu melengkung dan grid di layar kecil.</span>
+                        </span>
+                    </span>
+                    <i class="status-indicator fa-solid fa-circle-check hidden text-brand-red"></i>
+                </button>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+                <span class="font-rajdhani text-sm font-bold tracking-wide text-white">SOUND EFFECT</span>
+                <button type="button" onclick="toggleAudio()" id="btn-audio-toggle" class="settings-toggle">ON</button>
+            </div>
+            <button type="button" onclick="closeSettingsModal()" class="settings-action mt-5">SIMPAN & KEMBALI</button>
+        </div>
+    </div>
+
+    <script>
+        // Main menu categories. Vehicles opens a dedicated submenu.
+        const menuItems = [
+            { id: 'phone',     title: 'Phone',     icon: 'fa-mobile-screen-button', cmd: '/phone' },
+            { id: 'inventory', title: 'Inventory', icon: 'fa-boxes-stacked',         cmd: '/inventory' },
+            { id: 'vehicles',  title: 'Vehicles',  icon: 'fa-car-side',              action: 'open-vehicles' },
+            { id: 'house',     title: 'House',     icon: 'fa-house-chimney',         cmd: '/house' },
+            { id: 'eprop',     title: 'Eprop',     icon: 'fa-building',              cmd: '/prop' },
+            { id: 'faction',   title: 'Faction',   icon: 'fa-shield-halved',         cmd: '/f' },
+            { id: 'toys',      title: 'Toys',      icon: 'fa-gamepad',               cmd: '/toys' },
+            { id: 'settings',  title: 'Settings',  icon: 'fa-gear',                  cmd: 'SETTING_ACTION' }
+        ];
+
+        // Change these command strings if your server/client uses different commands.
+        const vehicleItems = [
+            { id: 'engine', title: 'Engine',  icon: 'fa-key',         cmd: '/engine' },
+            { id: 'lights', title: 'Lampu',   icon: 'fa-lightbulb',   cmd: '/lights' },
+            { id: 'trunk',  title: 'Trunk',   icon: 'fa-box-open',    cmd: '/trunk' },
+            { id: 'lock',   title: 'Lock',    icon: 'fa-lock',        cmd: '/lock' },
+            { id: 'hood',   title: 'Hood',    icon: 'fa-car',         cmd: '/hood' },
+            { id: 'back',   title: 'Kembali', icon: 'fa-arrow-left',  action: 'back' }
+        ];
+
+        const LOGO_ASSET_PATH = 'assets/logo.png';
+        let currentShape = 'circle';
+        let currentMenu = 'main';
+        let soundEnabled = true;
+        let audioCtx = null;
+        let radialClosed = false;
+
+        function getActiveItems() {
+            return currentMenu === 'vehicles' ? vehicleItems : menuItems;
+        }
+
+        // Return dimensions in the logical landscape coordinate system. The CSS
+        // rotates the UI on portrait screens, so layout calculations must use
+        // the long edge as width and the short edge as height in both cases.
+        function getLogicalViewport() {
+            const width = document.documentElement.clientWidth || window.innerWidth || 1;
+            const height = document.documentElement.clientHeight || window.innerHeight || 1;
+            return width >= height
+                ? { width, height }
+                : { width: height, height: width };
+        }
+
+        function renderAllMenus() {
+            renderCircleMenu();
+            renderHexagonMenu();
+            renderArcMenu();
+            updateCenterHub();
+            updateShapeVisibility();
+        }
+
+        function initializeCenterLogos() {
+            document.querySelectorAll('.center-hub-logo').forEach(img => {
+                const showFallback = () => {
+                    img.dataset.failed = 'true';
+                    img.classList.add('hidden');
+                    const fallback = img.parentElement.querySelector('i');
+                    if (fallback) fallback.classList.remove('hidden');
+                };
+                img.addEventListener('error', showFallback, { once: true });
+                img.src = LOGO_ASSET_PATH;
+                if (img.complete && img.naturalWidth === 0) showFallback();
+            });
+        }
+
+        function updateCenterHub() {
+            const isSubmenu = currentMenu === 'vehicles';
+            const title = isSubmenu ? 'BACK' : 'CLOSE';
+            const hint = isSubmenu ? 'KEMBALI KE MENU' : 'TEKAN [ESC]';
+            const icon = isSubmenu ? 'fa-arrow-left' : 'fa-xmark';
+            const hubs = [
+                { title: 'center-hub-title', icon: 'center-hub-icon-circle', hint: 'center-hub-hint-circle', logo: 'center-hub-logo-circle', arc: false },
+                { title: 'center-hub-title-hexagon', icon: 'center-hub-icon-hexagon', hint: 'center-hub-hint-hexagon', logo: 'center-hub-logo-hexagon', arc: false },
+                { title: 'center-hub-title-arc', icon: 'center-hub-icon-arc', hint: 'center-hub-hint-arc', logo: 'center-hub-logo-arc', arc: true }
+            ];
+            hubs.forEach(hub => {
+                const titleNode = document.getElementById(hub.title);
+                const iconNode = document.getElementById(hub.icon);
+                const hintNode = document.getElementById(hub.hint);
+                const logoNode = document.getElementById(hub.logo);
+                const hasLogo = logoNode && logoNode.dataset.failed !== 'true';
+                if (titleNode) titleNode.textContent = isSubmenu ? (hub.arc ? 'BACK TO MENU' : title) : (hub.arc ? 'CLOSE MENU' : title);
+                if (hintNode) hintNode.textContent = hint;
+                if (logoNode) logoNode.classList.toggle('hidden', isSubmenu || !hasLogo);
+                if (iconNode) {
+                    iconNode.className = `fa-solid ${isSubmenu ? icon : 'fa-xmark'}`;
+                    iconNode.classList.toggle('hidden', !isSubmenu && hasLogo);
+                }
+            });
+        }
+
+        function showMainMenu() {
+            currentMenu = 'main';
+            playSound('select');
+            renderAllMenus();
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(780, now + .045);
+                    gain.gain.setValueAtTime(.025, now);
+                    gain.gain.exponentialRampToValueAtTime(.001, now + .05);
+                    osc.start(now);
+                    osc.stop(now + .05);
+                } else {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.exponentialRampToValueAtTime(960, now + .085);
+                    gain.gain.setValueAtTime(.075, now);
+                    gain.gain.exponentialRampToValueAtTime(.001, now + .09);
+                    osc.start(now);
+                    osc.stop(now + .09);
+                }
+            } catch (error) {
+                console.warn('Audio FX unavailable:', error);
+            }
+        }
+
+        /*
+         * Native bridge adapter. Only the bridge signatures already used by this
+         * resource are called. Errors are caught so a missing/unsupported bridge
+         * cannot break the HTML menu.
+         */
+        function emitClientEvent(eventName, ...args) {
+            if (window.cef && typeof window.cef.emit === 'function') {
+                try {
+                    window.cef.emit(eventName, ...args);
+                    return true;
+                } catch (error) {
+                    console.warn(`[RadialMenu] cef.emit failed for "${eventName}":`, error);
+                    return false;
+                }
+            }
+
+            if (window.mp && typeof window.mp.trigger === 'function') {
+                try {
+                    window.mp.trigger(eventName, ...args);
+                    return true;
+                } catch (error) {
+                    console.warn(`[RadialMenu] mp.trigger failed for "${eventName}":`, error);
+                    return false;
+                }
+            }
+
+            console.info(`[RadialMenu] Native bridge not found; local fallback used for "${eventName}".`);
+            return false;
+        }
+
+        function emitRadialCommand(command) {
+            return emitClientEvent('selectRadialItem', command);
+        }
+
+        function executeCommand(item) {
+            if (!item || radialClosed) return;
+            playSound('select');
+            if (item.action === 'open-vehicles') {
+                currentMenu = 'vehicles';
+                renderAllMenus();
+                return;
+            }
+            if (item.action === 'back') {
+                showMainMenu();
+                return;
+            }
+            if (item.cmd === 'SETTING_ACTION') {
+                openSettingsModal();
+                return;
+            }
+            if (item.cmd) {
+                // A menu action must not emit the close event as a second,
+                // immediate bridge call. Some CEF clients process these events
+                // asynchronously; closing here can make the command appear lost.
+                // Only the center Close button / ESC closes from the HTML side.
+                const dispatched = emitRadialCommand(item.cmd);
+                if (!dispatched) {
+                    console.warn(`[RadialMenu] Command "${item.cmd}" was not dispatched; menu remains open.`);
+                }
+                return dispatched;
+            }
+            return false;
+        }
+
+        function bindMenuItemClick(element, item) {
+            element.addEventListener('click', event => {
+                event.preventDefault();
+                event.stopPropagation();
+                // Pointer/touch activation must not leave a focused tile behind.
+                // Use the active element as SVG <g> nodes do not expose blur() in
+                // every Chromium/CEF version.
+                const touchActivation = document.documentElement.classList.contains('touch-input');
+                if ((event.detail !== 0 || touchActivation) && element) {
+                    if (typeof element.blur === 'function') element.blur();
+                    const active = document.activeElement;
+                    if (active && active !== document.body && typeof active.blur === 'function') active.blur();
+                }
+                executeCommand(item);
+            });
+        }
+
+        function handleCenterClick() {
+            if (radialClosed) return;
+            if (currentMenu === 'vehicles') {
+                showMainMenu();
+                return;
+            }
+            playSound('select');
+            closeRadialMenu();
+        }
+
+        function closeRadialMenu() {
+            // Idempotent: rapid taps / ESC + touch can only emit one close event.
+            if (radialClosed) return false;
+            radialClosed = true;
+            currentMenu = 'main';
+
+            const settingsPanel = document.getElementById('inline-settings-panel');
+            if (settingsPanel) {
+                settingsPanel.classList.remove('is-open');
+                settingsPanel.setAttribute('aria-hidden', 'true');
+            }
+
+            // Hide the web UI immediately; native code should also hide the CEF view.
+            document.body.classList.add('radial-menu-closed');
+
+            // Keep this event name unchanged for compatibility with the existing client hook.
+            return emitClientEvent('closeRadialMenu');
+        }
+
+        function openRadialMenu() {
+            // Call this from native code if the same CEF page is reused after closing.
+            radialClosed = false;
+            currentMenu = 'main';
+            document.body.classList.remove('radial-menu-closed');
+            closeSettingsModal();
+            renderAllMenus();
+        }
+
+        // Stable callable entry points for a native CEF wrapper.
+        window.RadialMenu = window.RadialMenu || {};
+        window.RadialMenu.open = openRadialMenu;
+        window.RadialMenu.close = closeRadialMenu;
+        window.openRadialMenu = openRadialMenu;
+        window.closeRadialMenu = closeRadialMenu;
+
+        function createArcPath(x, y, innerRadius, outerRadius, startAngle, endAngle) {
+            const startRad = startAngle * Math.PI / 180;
+            const endRad = endAngle * Math.PI / 180;
+            const x1 = x + outerRadius * Math.cos(startRad);
+            const y1 = y + outerRadius * Math.sin(startRad);
+            const x2 = x + outerRadius * Math.cos(endRad);
+            const y2 = y + outerRadius * Math.sin(endRad);
+            const x3 = x + innerRadius * Math.cos(endRad);
+            const y3 = y + innerRadius * Math.sin(endRad);
+            const x4 = x + innerRadius * Math.cos(startRad);
+            const y4 = y + innerRadius * Math.sin(startRad);
+            const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+            return [
+                `M ${x1} ${y1}`,
+                `A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                `L ${x3} ${y3}`,
+                `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${x4} ${y4}`,
+                'Z'
+            ].join(' ');
+        }
+
+        function makeKeyboardAccessible(element, item) {
+            element.setAttribute('role', 'button');
+            element.setAttribute('tabindex', '0');
+            element.setAttribute('aria-label', item.title);
+            element.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    executeCommand(item);
+                }
+            });
+        }
+
+        // 1. Circle radial layout
+        function renderCircleMenu() {
+            const group = document.getElementById('circle-slices-group');
+            group.innerHTML = '';
+            const items = getActiveItems();
+            const total = items.length;
+            const outerRadius = 246;
+            const innerRadius = 126;
+            const gapAngle = total >= 8 ? 2.4 : 3.2;
+            const textRadius = (innerRadius + outerRadius) / 2;
+
+            items.forEach((item, index) => {
+                const sliceAngle = 360 / total;
+                const startAngle = index * sliceAngle - 90 + gapAngle / 2;
+                const endAngle = (index + 1) * sliceAngle - 90 - gapAngle / 2;
+                const midAngle = ((startAngle + endAngle) / 2) * Math.PI / 180;
+                const textX = Math.cos(midAngle) * textRadius;
+                const textY = Math.sin(midAngle) * textRadius;
+
+                const groupNode = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                groupNode.setAttribute('class', 'slice-group menu-enter');
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', createArcPath(0, 0, innerRadius, outerRadius, startAngle, endAngle));
+                path.setAttribute('class', 'slice-path');
+
+                const foreign = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+                foreign.setAttribute('x', textX - 49);
+                foreign.setAttribute('y', textY - 34);
+                foreign.setAttribute('width', '98');
+                foreign.setAttribute('height', '68');
+                foreign.setAttribute('class', 'slice-fo');
+                const labelSize = item.title.length > 8 ? '10px' : '12px';
+                foreign.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="slice-content"><i class="fa-solid ${item.icon}"></i><span style="font-size:${labelSize}">${item.title}</span></div>`;
+
+                groupNode.appendChild(path);
+                groupNode.appendChild(foreign);
+                groupNode.addEventListener('mouseenter', () => playSound('hover'));
+                bindMenuItemClick(groupNode, item);
+                makeKeyboardAccessible(groupNode, item);
+                group.appendChild(groupNode);
+            });
+        }
+
+        // 2. Hexagon node layout
+        function renderHexagonMenu() {
+            const container = document.getElementById('hex-nodes-container');
+            const linesGroup = document.getElementById('hex-connector-lines');
+            container.innerHTML = '';
+            linesGroup.innerHTML = '';
+
+            const items = getActiveItems();
+            const total = items.length;
+            const viewport = getLogicalViewport();
+            const viewportWidth = viewport.width;
+            const viewportHeight = viewport.height;
+            // Fit the node ring to the short edge of the landscape canvas.
+            const size = Math.max(176, Math.min(viewportWidth - 18, viewportHeight * .82, 540));
+            const scale = size / 540;
+            const baseRadius = 190;
+            const radius = baseRadius * scale;
+            const nodeSize = Math.max(42, Math.min(104, size * .19));
+
+            items.forEach((item, index) => {
+                const angle = (index * (360 / total) - 90) * Math.PI / 180;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', '270');
+                line.setAttribute('y1', '270');
+                line.setAttribute('x2', String(270 + Math.cos(angle) * baseRadius));
+                line.setAttribute('y2', String(270 + Math.sin(angle) * baseRadius));
+                line.setAttribute('stroke', 'url(#lineGradient)');
+                line.setAttribute('stroke-width', '2');
+                line.setAttribute('stroke-dasharray', '5 6');
+                line.setAttribute('opacity', '.8');
+                linesGroup.appendChild(line);
+
+                const node = document.createElement('button');
+                node.type = 'button';
+                node.className = 'hex-node menu-enter';
+                node.style.width = `${nodeSize}px`;
+                node.style.height = `${nodeSize}px`;
+                node.style.setProperty('--node-size', `${nodeSize}px`);
+                node.style.setProperty('--node-gap', `${Math.max(2, Math.min(7, nodeSize * .07))}px`);
+                node.style.setProperty('--node-icon-size', `${Math.max(18, Math.min(34, nodeSize * .42))}px`);
+                node.style.setProperty('--node-icon-font', `${Math.max(10, Math.min(19, nodeSize * .20))}px`);
+                node.style.setProperty('--node-icon-radius', `${Math.max(6, Math.min(10, nodeSize * .12))}px`);
+                node.style.setProperty('--node-font-size', `${Math.max(7, Math.min(12, nodeSize * .115))}px`);
+                node.style.left = `calc(50% + ${x}px)`;
+                node.style.top = `calc(50% + ${y}px)`;
+                // Keep the Hexagon cards consistent with Circle/Arc: icon + title only.
+                node.innerHTML = `<span class="hex-node-inner"><i class="fa-solid ${item.icon}" aria-hidden="true"></i><span>${item.title}</span></span>`;
+                node.addEventListener('mouseenter', () => playSound('hover'));
+                bindMenuItemClick(node, item);
+                node.setAttribute('aria-label', item.title);
+                container.appendChild(node);
+            });
+        }
+
+        // 3. Arc layout on desktop; balanced grid on narrow screens.
+        function renderArcMenu() {
+            const container = document.getElementById('arc-items-container');
+            container.innerHTML = '';
+            const items = getActiveItems();
+            const viewport = getLogicalViewport();
+            const viewportWidth = viewport.width;
+            const viewportHeight = viewport.height;
+            // Phones and short landscape viewports use a balanced four-column grid.
+            const compact = viewportWidth <= 760 ||
+                (viewportHeight <= 520 && viewportWidth <= 1200);
+            container.classList.toggle('is-compact', compact);
+
+            if (compact) {
+                items.forEach(item => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'arc-item menu-enter';
+                    button.innerHTML = `<span class="arc-icon"><i class="fa-solid ${item.icon}"></i></span><span class="arc-item-label">${item.title}</span>`;
+                    button.addEventListener('mouseenter', () => playSound('hover'));
+                    bindMenuItemClick(button, item);
+                    button.setAttribute('aria-label', item.title);
+                    container.appendChild(button);
+                });
+                return;
+            }
+
+            const total = items.length;
+            const width = container.clientWidth || Math.min(viewportWidth - 24, 1040);
+            const radiusX = Math.min(width * .40, 390);
+            const radiusY = radiusX * .38;
+            const startAngle = 200;
+            const endAngle = -20;
+
+            items.forEach((item, index) => {
+                const angle = (startAngle - index * ((startAngle - endAngle) / Math.max(1, total - 1))) * Math.PI / 180;
+                const x = Math.cos(angle) * radiusX;
+                const y = -Math.sin(angle) * radiusY;
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'arc-item menu-enter';
+                button.style.left = `calc(50% + ${x}px)`;
+                button.style.top = `calc(59% + ${y}px)`;
+                button.innerHTML = `<span class="arc-icon"><i class="fa-solid ${item.icon}"></i></span><span class="arc-item-label">${item.title}</span>`;
+                button.addEventListener('mouseenter', () => playSound('hover'));
+                bindMenuItemClick(button, item);
+                button.setAttribute('aria-label', item.title);
+                container.appendChild(button);
+            });
+        }
+
+        function selectShape(shape) {
+            if (!['circle', 'hexagon', 'arc'].includes(shape)) return;
+            currentShape = shape;
+            playSound('select');
+            updateShapeVisibility();
+            updateSettingsUI();
+        }
+
+        function updateShapeVisibility() {
+            const layouts = {
+                circle: document.getElementById('layout-circle'),
+                hexagon: document.getElementById('layout-hexagon'),
+                arc: document.getElementById('layout-arc')
+            };
+            Object.entries(layouts).forEach(([shape, element]) => {
+                element.classList.toggle('hidden', shape !== currentShape);
+                if (shape === currentShape) {
+                    element.classList.remove('menu-enter');
+                    void element.offsetWidth;
+                    element.classList.add('menu-enter');
+                }
+            });
+        }
+
+        function updateSettingsUI() {
+            ['circle', 'hexagon', 'arc'].forEach(shape => {
+                const option = document.getElementById(`opt-shape-${shape}`);
+                const indicator = option.querySelector('.status-indicator');
+                option.classList.toggle('active', shape === currentShape);
+                indicator.classList.toggle('hidden', shape !== currentShape);
+            });
+        }
+
+        function openSettingsModal() {
+            const modal = document.getElementById('inline-settings-panel');
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            updateSettingsUI();
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('inline-settings-panel');
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const button = document.getElementById('btn-audio-toggle');
+            button.textContent = soundEnabled ? 'ON' : 'OFF';
+            button.classList.toggle('off', !soundEnabled);
+            if (soundEnabled) playSound('select');
+        }
+
+        function setupInputModality() {
+            const root = document.documentElement;
+            const setTouchMode = () => {
+                root.classList.add('touch-input');
+                root.classList.remove('keyboard-navigation');
+            };
+            const setPointerMode = () => {
+                root.classList.remove('touch-input', 'keyboard-navigation');
+            };
+            const setKeyboardMode = event => {
+                if (['Tab', 'Enter', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                    root.classList.add('keyboard-navigation');
+                    root.classList.remove('touch-input');
+                }
+            };
+
+            if (window.PointerEvent) {
+                document.addEventListener('pointerdown', event => {
+                    if (event.pointerType === 'touch' || event.pointerType === 'pen') setTouchMode();
+                    else if (event.pointerType === 'mouse') setPointerMode();
+                }, true);
+            }
+            // Legacy Android WebView / CEF fallback.
+            document.addEventListener('touchstart', setTouchMode, { passive: true, capture: true });
+            document.addEventListener('mousedown', setPointerMode, true);
+            document.addEventListener('keydown', setKeyboardMode, true);
+        }
+
+        function setupKeyListeners() {
+            window.addEventListener('keydown', event => {
+                if (radialClosed) return;
+                const modal = document.getElementById('inline-settings-panel');
+                const modalOpen = modal && modal.classList.contains('is-open');
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (modalOpen) closeSettingsModal();
+                    else handleCenterClick();
+                    return;
+                }
+                if (modalOpen) return;
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+                    const shapes = ['circle', 'hexagon', 'arc'];
+                    selectShape(shapes[(shapes.indexOf(currentShape) + 1) % shapes.length]);
+                    return;
+                }
+                if (/^[1-9]$/.test(event.key)) {
+                    const item = getActiveItems()[Number(event.key) - 1];
+                    if (item) executeCommand(item);
+                }
+            });
+        }
+
+        // Initialize after all menu elements exist.
+        initializeCenterLogos();
+        setupInputModality();
+        renderAllMenus();
+        setupKeyListeners();
+        let resizeFrame = null;
+        function refreshResponsiveMenus() {
+            if (resizeFrame) cancelAnimationFrame(resizeFrame);
+            resizeFrame = requestAnimationFrame(() => {
+                renderAllMenus();
+                resizeFrame = null;
+            });
+        }
+        window.addEventListener('resize', refreshResponsiveMenus, { passive: true });
+        window.addEventListener('orientationchange', refreshResponsiveMenus, { passive: true });
+        window.addEventListener('pageshow', refreshResponsiveMenus, { passive: true });
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', refreshResponsiveMenus, { passive: true });
+        }
+    </script>
+</body>
+</html>
