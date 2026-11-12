@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#08090c">
-    <title>GTA SA-MP | Modern Radial Menu (Merah Putih Edition)</title>
+    <title>GTA SA-MP | Modern Radial Menu</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -49,7 +49,6 @@
             --line: rgba(255, 255, 255, .18);
         }
 
-        :root { --menu-scale: 0.9; }
         * { box-sizing: border-box; }
         html, body { width: 100%; height: 100%; margin: 0; }
         body {
@@ -157,7 +156,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: min(70vmin, 430px);
+            width: min(86vmin, 530px);
             aspect-ratio: 1 / 1;
             flex: 0 0 auto;
         }
@@ -244,7 +243,7 @@
             position: absolute;
             z-index: 30;
             display: flex;
-            width: clamp(88px, 28%, 142px);
+            width: clamp(108px, 30%, 166px);
             aspect-ratio: 1 / 1;
             flex-direction: column;
             align-items: center;
@@ -308,7 +307,7 @@
         #layout-hexagon {
             position: relative;
             display: flex;
-            width: min(72vmin, 440px);
+            width: min(88vmin, 540px);
             aspect-ratio: 1 / 1;
             align-items: center;
             justify-content: center;
@@ -624,15 +623,8 @@
             display: flex;
             pointer-events: none;
             padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
-            transition: opacity .18s ease, visibility .18s ease;
         }
         #speedo-layer.sp-off { display: none !important; }
-        /* Saat menu radial terbuka, HUD disembunyikan agar tidak menutupi menu */
-        body:not(.radial-menu-closed) #speedo-layer {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
         #speedo-layer[data-pos="top-left"]     { align-items: flex-start; justify-content: flex-start; }
         #speedo-layer[data-pos="top-center"]   { align-items: flex-start; justify-content: center; }
         #speedo-layer[data-pos="top-right"]    { align-items: flex-start; justify-content: flex-end; }
@@ -647,46 +639,11 @@
             display: none;
             position: relative;
             flex: 0 0 auto;
-            transform: translate(var(--sp-dx, 0px), var(--sp-dy, 0px)) scale(var(--sp-scale, 1));
-            transform-origin: center center;
-            will-change: transform;
-            touch-action: none;
-        }
-        .speedo-resize-handle {
-            position: absolute;
-            right: -14px;
-            bottom: -14px;
-            z-index: 30;
-            display: none;
-            width: 38px;
-            height: 38px;
-            place-items: center;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            background: linear-gradient(140deg, #ef4444, #991b1b);
-            color: #fff;
-            font-size: 13px;
-            /* ukuran pegangan tetap sama walaupun HUD diperbesar/diperkecil */
-            transform: scale(calc(1 / var(--sp-scale, 1)));
-            transform-origin: bottom right;
-            box-shadow: 0 0 16px rgba(239, 68, 68, .65);
-            cursor: nwse-resize;
-            pointer-events: none;
-            touch-action: none;
-        }
-        #speedo-layer.is-dragging .speedo-resize-handle {
-            display: grid;
-            pointer-events: auto;
+            transform: translate(var(--sp-dx, 0px), var(--sp-dy, 0px));
         }
         .speedo-variant.is-active { display: block; }
-        /* Mode geser: HUD tetap tampil walau menu terbuka agar bisa diatur posisinya */
-        #speedo-layer.is-dragging {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
         #speedo-layer.is-dragging .speedo-variant {
             pointer-events: auto;
-            touch-action: none;
             cursor: grab;
 
             outline: 2px dashed rgba(239, 68, 68, .8);
@@ -694,23 +651,6 @@
             border-radius: 20px;
         }
         #speedo-layer.is-dragging .speedo-variant:active { cursor: grabbing; }
-        /* Saat menggeser, efek berat dimatikan sementara agar gerakan mulus di HP */
-        #speedo-layer.is-dragging .cluster-shell,
-        #speedo-layer.is-dragging .cluster-housing {
-            filter: none !important;
-        }
-        #speedo-layer.is-dragging .twopod .arc,
-        #speedo-layer.is-dragging .twopod .needle,
-        #speedo-layer.is-dragging .twopod .shift-bar,
-        #speedo-layer.is-dragging .twopod .wing,
-        #speedo-layer.is-dragging .onepod .arc,
-        #speedo-layer.is-dragging .onepod .status-dock {
-            filter: none !important;
-        }
-        #speedo-layer.is-dragging .speedo-variant,
-        #speedo-layer.is-dragging .speedo-variant * {
-            transition: none !important;
-        }
 
         @keyframes spEnter {
             from { opacity: 0; transform: translateY(10px) scale(.96); }
@@ -991,51 +931,6 @@
         .spu-pos:hover { border-color: rgba(239, 68, 68, .6); color: #fff; }
         .spu-pos.active { border-color: #ef4444; background: rgba(220, 38, 38, .22); color: #fff; box-shadow: 0 0 14px rgba(239, 68, 68, .35); }
 
-        /* ---------- Skala ukuran menu (diatur dari Settings) ---------- */
-        #layout-circle,
-        #layout-hexagon {
-            zoom: var(--menu-scale, 0.9);
-        }
-        #arc-items-container:not(.is-compact) .arc-item {
-            width: calc(clamp(66px, 8.6vw, 104px) * var(--menu-scale, 0.9));
-            height: calc(clamp(78px, 9.9vw, 112px) * var(--menu-scale, 0.9));
-        }
-        #arc-items-container:not(.is-compact) .arc-icon {
-            width: calc(clamp(32px, 4.4vmin, 40px) * var(--menu-scale, 0.9));
-            height: calc(clamp(32px, 4.4vmin, 40px) * var(--menu-scale, 0.9));
-            font-size: calc(clamp(15px, 2.4vmin, 18px) * var(--menu-scale, 0.9));
-        }
-        #arc-items-container:not(.is-compact) .arc-item-label {
-            font-size: calc(clamp(10px, 1.9vmin, 12px) * var(--menu-scale, 0.9));
-        }
-        #arc-items-container.is-compact .arc-item,
-        #layout-arc .arc-close-button {
-            zoom: var(--menu-scale, 0.9);
-        }
-        .menu-size-range {
-            width: 100%;
-            height: 24px;
-            margin: 0;
-            accent-color: #dc2626;
-            background: transparent;
-            cursor: pointer;
-        }
-        .menu-size-range::-webkit-slider-runnable-track {
-            height: 6px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, #dc2626, #ef4444, rgba(255, 255, 255, .25));
-        }
-        .menu-size-range::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            margin-top: -6px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            background: #dc2626;
-            box-shadow: 0 0 12px rgba(239, 68, 68, .6);
-        }
-
         /* ==================== SETTINGS MODAL ==================== */
         #inline-settings-panel {
             position: fixed;
@@ -1159,37 +1054,6 @@
             .settings-card { max-height: 88vw; }
         }
 
-        /* Layar HP / layar kecil: menu dibuat lebih ringkas agar tidak menutupi gameplay */
-        @media (max-width: 760px), ((hover: none) and (pointer: coarse)) {
-            #layout-circle { width: min(62vmin, 330px); }
-            #layout-hexagon { width: min(64vmin, 340px); }
-            .center-hub { width: clamp(74px, 27%, 104px); }
-            .hub-title { font-size: 11px; letter-spacing: .08em; }
-            .hub-hint { padding: 2px 7px; font-size: 7px; }
-            .hub-logo-wrap { width: 62%; }
-            .slice-content { gap: 2px; }
-            .slice-content i { font-size: clamp(12px, 3.4vw, 17px); }
-            .slice-content span { font-size: 9px; letter-spacing: .05em; }
-            .hex-node-inner i { width: clamp(16px, 4vmin, 22px); height: clamp(16px, 4vmin, 22px); font-size: clamp(9px, 2vmin, 12px); }
-            .hex-node-inner span { font-size: clamp(7px, 1.5vmin, 9.5px); }
-            .arc-item { height: clamp(68px, 15vmin, 84px); }
-            .arc-icon { width: clamp(26px, 6vmin, 32px); height: clamp(26px, 6vmin, 32px); font-size: clamp(12px, 3vmin, 15px); }
-            .arc-close-button { min-height: 44px; padding: 6px 18px; gap: 9px; }
-            .arc-close-button .hub-logo-wrap { width: 34px; height: 34px; flex: 0 0 34px; }
-        }
-
-        /* Layar pendek (HP landscape): panel Settings dipadatkan agar semua kontrol mudah dijangkau */
-        @media (max-height: 520px) {
-            .settings-card { max-height: 94vh; padding: 14px 16px; border-radius: 18px; }
-            .settings-title { font-size: 17px; }
-            .shape-option { padding: 9px 12px; }
-            .shape-option-desc { display: none; }
-            .settings-action { min-height: 40px; }
-            .spu-pos-grid { grid-template-columns: repeat(3, 38px); gap: 6px; }
-            .spu-pos { width: 38px; height: 38px; }
-            .spu-chip { padding: 9px 4px; font-size: 11px; }
-        }
-
         @media (max-height: 520px) and (orientation: landscape) {
             #layout-arc { max-height: 96vh; gap: 8px; }
             #arc-items-container.is-compact .arc-item { height: clamp(60px, 17vh, 82px); }
@@ -1241,16 +1105,30 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
         }
-    </style>
-</head>
-<body>
+        /* Integrated deployment modes: use ?mode=radial or ?mode=speedometer. */
+        body[data-ui-mode="radial"] #speedo-layer { display: none !important; }
+        body[data-ui-mode="speedometer"] main,
+        body[data-ui-mode="speedometer"] .hud-overlay,
+        body[data-ui-mode="speedometer"] .hud-grid,
+        body[data-ui-mode="speedometer"] #inline-settings-panel { display: none !important; }    </style>
+    <script>
+        (function () {
+            const applyMode = () => {
+                const mode = 'radial';
+                if (mode === 'radial' || mode === 'speedometer') document.body.dataset.uiMode = mode;
+                if (mode === 'speedometer') document.body.classList.add('radial-menu-closed');
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyMode, { once: true });
+            else applyMode();
+        })();
+    </script></head>
+<body class="radial-menu-closed">
     <div class="hud-overlay"></div>
     <div class="hud-grid"></div>
 
     <!-- SPEEDOMETER HUD -->
     <div id="speedo-layer" data-pos="bottom-right">
         <div id="speedo-twopod" class="speedo-variant is-active" aria-hidden="true">
-            <button type="button" class="speedo-resize-handle" aria-label="Ubah ukuran speedometer"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
             <div class="twopod">
             <div id="tp-housingBezel" class="cluster-shell">
                 <div id="tp-shiftBar" class="shift-bar" aria-hidden="true"></div>
@@ -1378,7 +1256,6 @@
         </div>
 
         <div id="speedo-onepod" class="speedo-variant" aria-hidden="true">
-            <button type="button" class="speedo-resize-handle" aria-label="Ubah ukuran speedometer"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
             <div class="onepod">
             <div id="op-housingBezel" class="cluster-housing">
                 <svg class="dial" viewBox="0 0 350 350" aria-hidden="true">
@@ -1583,17 +1460,6 @@
             </div>
 
             <div class="mt-5 border-t border-white/15 pt-4">
-                <div class="mb-1 flex items-center justify-between gap-2">
-                    <span class="text-[10px] font-extrabold tracking-[.16em] text-white/50">UKURAN MENU</span>
-                    <span id="menu-size-value" class="font-rajdhani text-sm font-bold tracking-wide text-white">90%</span>
-                </div>
-                <input id="menu-size-range" type="range" min="60" max="115" step="1" value="90" oninput="setMenuScale(this.value / 100)" class="menu-size-range" aria-label="Ukuran menu radial">
-                <div class="flex items-center justify-between text-[9px] font-semibold tracking-wider text-white/40">
-                    <span>KECIL</span><span>SEDANG</span><span>BESAR</span>
-                </div>
-            </div>
-
-            <div class="mt-5 border-t border-white/15 pt-4">
                 <div class="mb-3 flex items-center justify-between gap-2">
                     <span class="text-[10px] font-extrabold tracking-[.16em] text-white/50">SPEEDOMETER</span>
                     <button type="button" onclick="toggleSpeedoDrag()" id="btn-speedo-drag" class="settings-toggle">GESER</button>
@@ -1602,14 +1468,6 @@
                     <button type="button" onclick="setSpeedoStyle('twopod')" id="opt-speedo-twopod" class="spu-chip"><i class="fa-solid fa-gauge-high"></i><span>2 POD</span></button>
                     <button type="button" onclick="setSpeedoStyle('onepod')" id="opt-speedo-onepod" class="spu-chip"><i class="fa-solid fa-gauge"></i><span>1 POD</span></button>
                     <button type="button" onclick="setSpeedoStyle('off')" id="opt-speedo-off" class="spu-chip"><i class="fa-solid fa-eye-slash"></i><span>OFF</span></button>
-                </div>
-                <div class="mb-1 mt-4 flex items-center justify-between gap-2">
-                    <span class="text-[10px] font-extrabold tracking-[.16em] text-white/50">UKURAN HUD</span>
-                    <span id="hud-size-value" class="font-rajdhani text-sm font-bold tracking-wide text-white">100%</span>
-                </div>
-                <input id="hud-size-range" type="range" min="60" max="220" step="1" value="100" oninput="setHudScale(this.value)" class="menu-size-range" aria-label="Ukuran speedometer">
-                <div class="mb-2 flex items-center justify-between text-[9px] font-semibold tracking-wider text-white/40">
-                    <span>KECIL</span><span>BESAR</span>
                 </div>
                 <div class="mb-2 mt-4 text-[10px] font-extrabold tracking-[.16em] text-white/50">POSISI HUD</div>
                 <div class="spu-pos-grid" id="spu-pos-grid">
@@ -1624,7 +1482,7 @@
                     <button type="button" class="spu-pos" data-pos="bottom-right" onclick="setSpeedoPosition('bottom-right')" aria-label="Kanan bawah"></button>
                 </div>
                 <div class="mt-3 flex items-center justify-between gap-3">
-                    <span class="text-[10px] font-medium leading-tight text-white/45">Aktifkan GESER lalu tarik HUD untuk pindah posisi, cubit (pinch) atau tarik pegangan sudut untuk ubah ukuran.</span>
+                    <span class="text-[10px] font-medium leading-tight text-white/45">Aktifkan GESER lalu tarik HUD untuk mengatur posisi bebas.</span>
                     <button type="button" onclick="resetSpeedoOffset()" class="settings-toggle off px-3">RESET</button>
                 </div>
             </div>
@@ -1872,7 +1730,13 @@
         window.RadialMenu.open = openRadialMenu;
         window.RadialMenu.close = closeRadialMenu;
         window.openRadialMenu = openRadialMenu;
-        window.closeRadialMenu = closeRadialMenu;
+        window.closeRadialMenu = closeRadialMenu;        if (window.cef && typeof window.cef.on === 'function') {
+            try {
+                window.cef.on('radial_open', () => openRadialMenu());
+            } catch (error) {
+                console.warn('[RadialMenu] radial_open listener unavailable:', error);
+            }
+        }
 
         function createArcPath(x, y, innerRadius, outerRadius, startAngle, endAngle) {
             const startRad = startAngle * Math.PI / 180;
@@ -2180,47 +2044,6 @@
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', refreshResponsiveMenus, { passive: true });
         }
-
-        /* ==================== UKURAN MENU RADIAL ==================== */
-        const MENU_SCALE_KEY = 'radial-menu-scale';
-        const MENU_SCALE_MIN = 0.6;
-        const MENU_SCALE_MAX = 1.15;
-        const DEFAULT_MENU_SCALE = 0.9;
-        let menuScale = DEFAULT_MENU_SCALE;
-
-        try {
-            const savedScale = parseFloat(localStorage.getItem(MENU_SCALE_KEY));
-            if (savedScale > 0) menuScale = savedScale;
-        } catch (error) {
-            console.info('[RadialMenu] Ukuran menu memakai default.');
-        }
-
-        function applyMenuScale(scale) {
-            const value = Math.min(MENU_SCALE_MAX, Math.max(MENU_SCALE_MIN, Number(scale) || DEFAULT_MENU_SCALE));
-            menuScale = value;
-            document.documentElement.style.setProperty('--menu-scale', value);
-            const label = document.getElementById('menu-size-value');
-            if (label) label.textContent = Math.round(value * 100) + '%';
-            const range = document.getElementById('menu-size-range');
-            if (range) range.value = String(Math.round(value * 100));
-            return value;
-        }
-
-        function setMenuScale(scale) {
-            const value = applyMenuScale(scale);
-            try {
-                localStorage.setItem(MENU_SCALE_KEY, String(value));
-            } catch (error) { /* diabaikan */ }
-            emitClientEvent('setMenuScale', value.toFixed(2));
-        }
-
-        function resetMenuScale() {
-            setMenuScale(DEFAULT_MENU_SCALE);
-        }
-
-        window.setMenuScale = setMenuScale;
-        window.resetMenuScale = resetMenuScale;
-        applyMenuScale(menuScale);
     </script>
 
     <script>
@@ -2232,9 +2055,7 @@
             if (!layer) return;
 
             const STORAGE_KEY = 'radial-speedometer-settings';
-            const DEFAULTS = { style: 'twopod', position: 'bottom-right', dx: 0, dy: 0, scale: 1 };
-            const SCALE_MIN = 0.6;
-            const SCALE_MAX = 2.2;
+            const DEFAULTS = { style: 'twopod', position: 'bottom-right', dx: 0, dy: 0 };
             const POSITIONS = ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right'];
             let cfg = Object.assign({}, DEFAULTS);
 
@@ -2247,7 +2068,6 @@
                         if (POSITIONS.includes(saved.position)) cfg.position = saved.position;
                         cfg.dx = Number(saved.dx) || 0;
                         cfg.dy = Number(saved.dy) || 0;
-                        cfg.scale = Math.min(SCALE_MAX, Math.max(SCALE_MIN, Number(saved.scale) || 1));
                     }
                 }
             } catch (error) {
@@ -2463,20 +2283,9 @@
                 return cfg.style === 'onepod' ? $('speedo-onepod') : $('speedo-twopod');
             }
 
-            // Batas ukuran agar HUD selalu muat di layar (dasar perhitungan: ukuran asli sebelum diskalakan)
-            function maxScaleForViewport(element) {
-                const target = element || activeVariant();
-                if (!target) return SCALE_MAX;
-                const width = target.offsetWidth || 1;
-                const height = target.offsetHeight || 1;
-                const fit = Math.min((window.innerWidth - 16) / width, (window.innerHeight - 16) / height);
-                return Math.max(SCALE_MIN, Math.min(SCALE_MAX, fit));
-            }
-
             function applyOffset() {
                 layer.style.setProperty('--sp-dx', cfg.dx + 'px');
                 layer.style.setProperty('--sp-dy', cfg.dy + 'px');
-                layer.style.setProperty('--sp-scale', cfg.scale);
             }
 
             function clampOffset() {
@@ -2486,7 +2295,6 @@
                 const pad = 8;
                 for (let pass = 0; pass < 3; pass++) {
                     const rect = element.getBoundingClientRect();
-                    if (rect.width > window.innerWidth - pad * 2 || rect.height > window.innerHeight - pad * 2) return;
                     let adjustX = 0;
                     let adjustY = 0;
                     if (rect.left < pad) adjustX = pad - rect.left;
@@ -2500,8 +2308,11 @@
                 }
             }
 
+            let applyingRemoteSettings = false;
+
             function emitSettings() {
-                const payload = { style: cfg.style, position: cfg.position, dx: cfg.dx, dy: cfg.dy, scale: Number(cfg.scale.toFixed(2)) };
+                if (applyingRemoteSettings) return;
+                const payload = { style: cfg.style, position: cfg.position, dx: cfg.dx, dy: cfg.dy };
                 try {
                     if (typeof emitClientEvent === 'function') {
                         emitClientEvent('setSpeedometerSettings', JSON.stringify(payload));
@@ -2524,7 +2335,6 @@
                 layer.classList.toggle('sp-off', cfg.style === 'off');
                 $('speedo-twopod').classList.toggle('is-active', cfg.style === 'twopod');
                 $('speedo-onepod').classList.toggle('is-active', cfg.style === 'onepod');
-                setScale(cfg.scale);
                 applyOffset();
                 if (cfg.style !== 'off') clampOffset();
                 updateSettingsUI();
@@ -2538,12 +2348,6 @@
                 document.querySelectorAll('.spu-pos').forEach(button => {
                     button.classList.toggle('active', button.dataset.pos === cfg.position);
                 });
-                const hudValue = $('hud-size-value');
-                const hudRange = $('hud-size-range');
-                const percent = Math.round(cfg.scale * 100);
-                if (hudValue) hudValue.textContent = percent + '%';
-                if (hudRange && document.activeElement !== hudRange) hudRange.value = String(percent);
-
                 const dragButton = $('btn-speedo-drag');
                 if (dragButton) {
                     const dragging = layer.classList.contains('is-dragging');
@@ -2553,6 +2357,21 @@
                 }
             }
 
+            window.applySpeedometerSettings = function (data) {
+                if (!data || typeof data !== 'object') return;
+                applyingRemoteSettings = true;
+                try {
+                    if (['twopod', 'onepod', 'off'].includes(data.style)) cfg.style = data.style;
+                    if (POSITIONS.includes(data.position)) cfg.position = data.position;
+                    if (Number.isFinite(Number(data.dx))) cfg.dx = Number(data.dx);
+                    if (Number.isFinite(Number(data.dy))) cfg.dy = Number(data.dy);
+                    if (cfg.style === 'off') layer.classList.remove('is-dragging');
+                    applySettings();
+                    renderSpeedometer();
+                } finally {
+                    applyingRemoteSettings = false;
+                }
+            };
             window.setSpeedoStyle = function (style) {
                 if (!['twopod', 'onepod', 'off'].includes(style)) return;
                 cfg.style = style;
@@ -2574,175 +2393,44 @@
             window.toggleSpeedoDrag = function () {
                 if (cfg.style === 'off') return;
                 layer.classList.toggle('is-dragging');
-                if (!layer.classList.contains('is-dragging')) resetGesture();
-                updateSettingsUI();
-            };
-
-            // Ubah ukuran HUD langsung dari Settings
-            window.setHudScale = function (percent) {
-                setScale(Number(percent) / 100);
-                applyOffset();
-                clampOffset();
-                saveSettings();
                 updateSettingsUI();
             };
 
             window.resetSpeedoOffset = function () {
                 cfg.dx = 0;
                 cfg.dy = 0;
-                cfg.scale = 1;
                 applySettings();
                 saveSettings();
             };
 
-            /* ---------- Geser bebas + ubah ukuran (drag / pinch / pegangan sudut) ---------- */
-            const pointers = new Map();
+            /* ---------- Geser bebas (drag) ---------- */
             let drag = null;
-            let pinch = null;
-            let rafId = null;
-
-            function setScale(value) {
-                const limit = maxScaleForViewport();
-                cfg.scale = Math.min(limit, Math.max(SCALE_MIN, Number(value) || 1));
-                layer.style.setProperty('--sp-scale', cfg.scale);
-            }
-
-            // Terapkan perubahan lewat requestAnimationFrame agar geseran tetap mulus di layar sentuh
-            function applyLive() {
-                if (rafId) return;
-                rafId = requestAnimationFrame(() => {
-                    rafId = null;
-                    applyOffset();
-                });
-            }
-
-            function variantCenter(element) {
-                const rect = element.getBoundingClientRect();
-                return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-            }
-
-            function startPinch() {
-                const [first, second] = [...pointers.values()];
-                pinch = {
-                    distance: Math.max(1, Math.hypot(first.x - second.x, first.y - second.y)),
-                    scale: cfg.scale
-                };
-                drag = null;
-            }
-
-            function startSingle(id, x, y, onHandle, element) {
-                pinch = null;
-                const target = element || activeVariant();
-                if (!target) return;
-                if (onHandle) {
-                    const rect = target.getBoundingClientRect();
-                    const center = variantCenter(target);
-                    drag = {
-                        id,
-                        mode: 'resize',
-                        centerX: center.x,
-                        centerY: center.y,
-                        startDist: Math.max(24, Math.hypot(x - center.x, y - center.y)),
-                        startScale: cfg.scale,
-                        startWidth: rect.width,
-                        startHeight: rect.height,
-                        baseX: cfg.dx,
-                        baseY: cfg.dy
-                    };
-                } else {
-                    drag = { id, mode: 'move', startX: x, startY: y, baseX: cfg.dx, baseY: cfg.dy };
-                }
-            }
-
-            function resetGesture() {
-                pointers.clear();
-                drag = null;
-                pinch = null;
-                if (rafId) {
-                    cancelAnimationFrame(rafId);
-                    rafId = null;
-                }
-            }
 
             layer.addEventListener('pointerdown', event => {
                 if (!layer.classList.contains('is-dragging')) return;
                 const element = activeVariant();
                 if (!element || !element.contains(event.target)) return;
-
-                pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                drag = { id: event.pointerId, startX: event.clientX, startY: event.clientY, baseX: cfg.dx, baseY: cfg.dy };
                 try { element.setPointerCapture(event.pointerId); } catch (error) { /* diabaikan */ }
                 event.preventDefault();
-
-                const onHandle = !!(event.target.closest && event.target.closest('.speedo-resize-handle'));
-                if (pointers.size >= 2) startPinch();
-                else startSingle(event.pointerId, event.clientX, event.clientY, onHandle, element);
             });
 
             layer.addEventListener('pointermove', event => {
-                if (!pointers.has(event.pointerId)) return;
-                pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-                event.preventDefault();
-
-                if (pinch && pointers.size >= 2) {
-                    const [first, second] = [...pointers.values()];
-                    const distance = Math.max(1, Math.hypot(first.x - second.x, first.y - second.y));
-                    setScale(pinch.scale * (distance / pinch.distance));
-                    applyLive();
-                    return;
-                }
-
                 if (!drag || drag.id !== event.pointerId) return;
-
-                if (drag.mode === 'resize') {
-                    const distance = Math.hypot(event.clientX - drag.centerX, event.clientY - drag.centerY);
-                    setScale(drag.startScale * (distance / drag.startDist));
-                    // Pertahankan pojok kiri-atas agar HUD tidak "kabur" saat dibesarkan/dikecilkan
-                    const ratio = cfg.scale / (drag.startScale || 1);
-                    cfg.dx = drag.baseX + (drag.startWidth * (ratio - 1)) / 2;
-                    cfg.dy = drag.baseY + (drag.startHeight * (ratio - 1)) / 2;
-                } else {
-                    cfg.dx = drag.baseX + (event.clientX - drag.startX);
-                    cfg.dy = drag.baseY + (event.clientY - drag.startY);
-                }
-                applyLive();
+                cfg.dx = Math.round(drag.baseX + (event.clientX - drag.startX));
+                cfg.dy = Math.round(drag.baseY + (event.clientY - drag.startY));
+                applyOffset();
+                event.preventDefault();
             });
 
-            function finishGesture() {
-                pinch = null;
+            function endDrag(event) {
+                if (!drag || drag.id !== event.pointerId) return;
                 drag = null;
-                if (rafId) {
-                    cancelAnimationFrame(rafId);
-                    rafId = null;
-                }
-                cfg.dx = Math.round(cfg.dx);
-                cfg.dy = Math.round(cfg.dy);
-                applyOffset();
                 clampOffset();
                 saveSettings();
             }
-
-            function endPointer(event) {
-                if (!pointers.has(event.pointerId)) return;
-                pointers.delete(event.pointerId);
-                if (drag && drag.id === event.pointerId) drag = null;
-
-                if (pointers.size >= 2) {
-                    startPinch();
-                    return;
-                }
-                if (pointers.size === 1) {
-                    // Jari yang masih menempel bisa langsung melanjutkan geser
-                    const [id, point] = [...pointers.entries()][0];
-                    startSingle(id, point.x, point.y, false, activeVariant());
-                    return;
-                }
-                finishGesture();
-            }
-
-            // Dengarkan di window agar lepas jari di luar HUD tetap tercatat
-            window.addEventListener('pointerup', endPointer);
-            window.addEventListener('pointercancel', endPointer);
-            window.addEventListener('blur', () => { if (pointers.size) { resetGesture(); } });
+            layer.addEventListener('pointerup', endDrag);
+            layer.addEventListener('pointercancel', endDrag);
 
             /* ---------- Pratinjau data kendaraan ---------- */
             const previewEnabled = new URLSearchParams(location.search).get('preview') !== '0';
@@ -2769,18 +2457,46 @@
                 });
             }
 
-            function handleViewportChange() {
-                setScale(cfg.scale);
-                clampOffset();
-            }
-            window.addEventListener('resize', handleViewportChange, { passive: true });
+            window.addEventListener('resize', () => clampOffset(), { passive: true });
             if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', handleViewportChange, { passive: true });
+                window.visualViewport.addEventListener('resize', () => clampOffset(), { passive: true });
             }
 
             applySettings();
             renderSpeedometer();
         })();
     </script>
-</body>
+    <script>
+        (function () {
+            function parsePayload(payload) {
+                if (typeof payload === 'string') { try { return JSON.parse(payload); } catch (e) { return null; } }
+                return payload && typeof payload === 'object' ? payload : null;
+            }
+            function onSpeedometerUpdate(payload) {
+                const data = parsePayload(payload);
+                if (data && typeof window.updateSpeedometer === 'function') window.updateSpeedometer(data);
+            }
+            if (window.cef && typeof window.cef.on === 'function') {
+                try { window.cef.on('speedometer_update', onSpeedometerUpdate); } catch (e) { console.warn('[Speedometer] cef listener unavailable', e); }
+            }
+            window.addEventListener('speedometer_update', event => onSpeedometerUpdate(event.detail));
+        })();
+    </script>    <script>
+        (function () {
+            function applyRemoteSpeedometerSettings(payload) {
+                let data = payload;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch (error) { return; }
+                }
+                if (!data || typeof data !== 'object') return;
+                if (typeof window.setSpeedoStyle === 'function' && ['twopod', 'onepod', 'off'].includes(data.style)) window.setSpeedoStyle(data.style);
+                if (typeof window.setSpeedoPosition === 'function' && typeof data.position === 'string') window.setSpeedoPosition(data.position);
+                if (typeof window.resetSpeedoOffset === 'function' && (data.dx !== undefined || data.dy !== undefined)) window.resetSpeedoOffset();
+            }
+            if (window.cef && typeof window.cef.on === 'function') {
+                try { window.cef.on('speedometer_settings', applyRemoteSpeedometerSettings); } catch (error) { console.warn('[Speedometer] settings listener unavailable', error); }
+            }
+            window.addEventListener('speedometer_settings', event => applyRemoteSpeedometerSettings(event.detail));
+        })();
+    </script></body>
 </html>
