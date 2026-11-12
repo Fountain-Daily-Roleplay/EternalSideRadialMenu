@@ -1122,7 +1122,7 @@
             else applyMode();
         })();
     </script></head>
-<body class="radial-menu-closed">
+<body>
     <div class="hud-overlay"></div>
     <div class="hud-grid"></div>
 
@@ -1738,11 +1738,7 @@
             }
         }
 
-        const hasCefEventBridge = window.cef && typeof window.cef.on === 'function';
-        if (!hasCefEventBridge) {
-            // Local preview fallback: CEF opens the menu through radial_open.
-            setTimeout(() => openRadialMenu(), 0);
-        }
+
         function createArcPath(x, y, innerRadius, outerRadius, startAngle, endAngle) {
             const startRad = startAngle * Math.PI / 180;
             const endRad = endAngle * Math.PI / 180;
