@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#08090c">
-    <title>GTA SA-MP | Modern Speedometer HUD</title>
+    <title>GTA SA-MP | Modern Radial Menu</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -1116,7 +1116,7 @@
     <script>
         (function () {
             const applyMode = () => {
-                const mode = 'speedometer';
+                const mode = 'radial';
                 if (mode === 'radial' || mode === 'speedometer') document.body.dataset.uiMode = mode;
                 if (mode === 'speedometer') document.body.classList.add('radial-menu-closed');
             };
@@ -2360,7 +2360,6 @@
                 const sizeValue = $('speedo-size-value');
                 if (sizeInput) sizeInput.value = Math.round(cfg.scale * 100);
                 if (sizeValue) sizeValue.textContent = Math.round(cfg.scale * 100) + '%';
-
                 const dragButton = $('btn-speedo-drag');
                 if (dragButton) {
                     const dragging = layer.classList.contains('is-dragging');
@@ -2524,4 +2523,3 @@
         })();
     </script></body>
 </html>
-
