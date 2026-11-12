@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#08090c">
-    <title>GTA SA-MP | Modern Radial Menu</title>
+    <title>GTA SA-MP | Modern Speedometer HUD</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -1116,7 +1116,7 @@
     <script>
         (function () {
             const applyMode = () => {
-                const mode = 'radial';
+                const mode = 'speedometer';
                 if (mode === 'radial' || mode === 'speedometer') document.body.dataset.uiMode = mode;
                 if (mode === 'speedometer') document.body.classList.add('radial-menu-closed');
             };
@@ -2360,6 +2360,7 @@
                 const sizeValue = $('speedo-size-value');
                 if (sizeInput) sizeInput.value = Math.round(cfg.scale * 100);
                 if (sizeValue) sizeValue.textContent = Math.round(cfg.scale * 100) + '%';
+
                 const dragButton = $('btn-speedo-drag');
                 if (dragButton) {
                     const dragging = layer.classList.contains('is-dragging');
@@ -2512,9 +2513,9 @@
                     try { data = JSON.parse(data); } catch (error) { return; }
                 }
                 if (!data || typeof data !== 'object') return;
-                if (typeof window.setSpeedoStyle === 'function' && ['twopod', 'onepod', 'off'].includes(data.style)) window.setSpeedoStyle(data.style);
-                if (typeof window.setSpeedoPosition === 'function' && typeof data.position === 'string') window.setSpeedoPosition(data.position);
-                if (typeof window.resetSpeedoOffset === 'function' && (data.dx !== undefined || data.dy !== undefined)) window.resetSpeedoOffset();
+                if (typeof window.applySpeedometerSettings === 'function') {
+                    window.applySpeedometerSettings(data);
+                }
             }
             if (window.cef && typeof window.cef.on === 'function') {
                 try { window.cef.on('speedometer_settings', applyRemoteSpeedometerSettings); } catch (error) { console.warn('[Speedometer] settings listener unavailable', error); }
@@ -2523,3 +2524,4 @@
         })();
     </script></body>
 </html>
+
