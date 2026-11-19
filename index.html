@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#08090c">
+    <meta name="theme-color" content="#050506">
     <title>GTA SA-MP | Modern Radial Menu</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -21,13 +23,14 @@
                             redDark: '#991B1B',
                             white: '#FFFFFF',
                             silver: '#E2E8F0',
-                            black: '#08090C',
-                            panel: '#111318'
+                            black: '#050506',
+                            panel: '#0D0D10'
                         }
                     },
                     fontFamily: {
-                        rajdhani: ['Rajdhani', 'sans-serif'],
-                        sans: ['Inter', 'sans-serif']
+                        rajdhani: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
                     }
                 }
             }
@@ -37,25 +40,26 @@
     <style>
         :root {
             color-scheme: dark;
-            --black: #08090c;
-            --panel: #111318;
-            --panel-soft: rgba(16, 18, 24, .95);
-            --red: #dc2626;
-            --red-bright: #ef4444;
-            --red-glow: rgba(239, 68, 68, .42);
+            --black: #050506;
+            --panel: #0D0D10;
+            --panel-soft: rgba(9, 9, 11, .96);
+            --red: #DC2626;
+            --red-bright: #EF4444;
+            --red-dark: #991B1B;
+            --red-glow: rgba(220, 38, 38, .48);
             --white: #ffffff;
             --silver: #f1f5f9;
-            --muted: rgba(255, 255, 255, .6);
-            --line: rgba(255, 255, 255, .18);
+            --muted: rgba(255, 255, 255, .62);
+            --line: rgba(255, 255, 255, .25);
         }
 
         * { box-sizing: border-box; }
         html, body { width: 100%; height: 100%; margin: 0; }
         body {
             overflow: hidden;
-            background-color: #08090c;
+            background-color: #050506;
             color: var(--white);
-            font-family: Inter, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -108,17 +112,18 @@
             inset: 0;
             pointer-events: none;
             background:
-                radial-gradient(circle at center, rgba(220, 38, 38, .15) 0%, rgba(255, 255, 255, .04) 26%, rgba(8, 9, 12, .65) 55%, rgba(0, 0, 0, .92) 100%);
+                radial-gradient(circle at center, rgba(220, 38, 38, .16) 0%, rgba(255, 255, 255, .03) 26%, rgba(5, 5, 6, .68) 55%, rgba(0, 0, 0, .92) 100%);
         }
         .hud-grid {
             position: fixed;
             inset: 0;
             pointer-events: none;
-            opacity: .16;
+            opacity: .18;
             background-image:
-                linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(239, 68, 68, .1) 1px, transparent 1px);
-            background-size: 36px 36px;
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, .035) 0px, rgba(255, 255, 255, .035) 1px, transparent 1px, transparent 6px),
+                linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220, 38, 38, .12) 1px, transparent 1px);
+            background-size: auto, 36px 36px, 36px 36px;
             -webkit-mask-image: radial-gradient(circle at center, black 0%, transparent 74%);
             mask-image: radial-gradient(circle at center, black 0%, transparent 74%);
         }
@@ -142,13 +147,23 @@
         .soft-pulse { animation: softPulse 3s ease-in-out infinite; }
         @keyframes softPulse {
             0%, 100% {
-                box-shadow: 0 0 0 2px rgba(255, 255, 255, .75), 0 0 0 5px rgba(220, 38, 38, .28), 0 12px 32px rgba(0, 0, 0, .75);
+                box-shadow:
+                    inset 0 1px 0 0 rgba(255, 255, 255, .32),
+                    inset 0 -1px 0 0 rgba(220, 38, 38, .45),
+                    0 0 0 2px rgba(255, 255, 255, .4),
+                    0 0 0 5px rgba(220, 38, 38, .25),
+                    0 12px 28px -6px rgba(0, 0, 0, .92);
             }
             50% {
-                box-shadow: 0 0 0 2px #ffffff, 0 0 26px rgba(239, 68, 68, .55), 0 12px 32px rgba(0, 0, 0, .85);
+                box-shadow:
+                    inset 0 1px 0 0 rgba(255, 255, 255, .45),
+                    inset 0 -1px 0 0 rgba(220, 38, 38, .65),
+                    0 0 0 2px #ffffff,
+                    0 0 22px rgba(239, 68, 68, .6),
+                    0 12px 28px -6px rgba(0, 0, 0, .95);
             }
         }
-        .glow-chrome { filter: drop-shadow(0 14px 28px rgba(0, 0, 0, .72)); }
+        .glow-chrome { filter: drop-shadow(0 12px 28px rgba(0, 0, 0, .92)); }
 
         /* ==================== 1. CIRCLE LAYOUT ==================== */
         #layout-circle {
@@ -163,29 +178,29 @@
         .circle-outer-ring {
             position: absolute;
             inset: 0.5%;
-            border: 1.5px solid rgba(239, 68, 68, .42);
+            border: 1.5px solid rgba(239, 68, 68, .48);
             border-radius: 50%;
-            box-shadow: 0 0 38px rgba(220, 38, 38, .18), inset 0 0 24px rgba(255, 255, 255, .05);
+            box-shadow: 0 0 36px rgba(220, 38, 38, .2), inset 0 1px 0 rgba(255, 255, 255, .22);
             pointer-events: none;
         }
         .circle-outer-ring::before {
             content: '';
             position: absolute;
             inset: 7px;
-            border: 1px dashed rgba(255, 255, 255, .24);
+            border: 1px dashed rgba(255, 255, 255, .25);
             border-radius: 50%;
         }
         .circle-outer-ring::after {
             content: '';
             position: absolute;
             inset: -7px;
-            border: 1px solid rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .14);
             border-radius: 50%;
         }
         #circle-menu-svg { width: 100%; height: 100%; overflow: visible; }
         .slice-path {
-            fill: rgba(15, 17, 23, .95);
-            stroke: rgba(255, 255, 255, .24);
+            fill: url(#obsidianSliceGrad);
+            stroke: rgba(255, 255, 255, .25);
             stroke-width: 1.5;
             transition: fill .18s ease, stroke .18s ease, filter .18s ease;
             cursor: pointer;
@@ -195,9 +210,9 @@
             fill: url(#merahPutihGradient);
             stroke: #ffffff;
             stroke-width: 2;
-            filter: drop-shadow(0 0 16px rgba(239, 68, 68, .55));
+            filter: drop-shadow(0 0 16px rgba(239, 68, 68, .65));
         }
-        .slice-group:active .slice-path { fill: #b91c1c; }
+        .slice-group:active .slice-path { fill: #991B1B; }
         .slice-fo { pointer-events: none; }
         .slice-content {
             display: flex;
@@ -206,15 +221,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 6px;
             color: #ffffff;
             text-align: center;
             transition: color .18s ease, transform .18s ease;
         }
         .slice-content i {
             font-size: clamp(16px, 2.7vw, 22px);
-            color: #ef4444;
-            filter: drop-shadow(0 2px 6px rgba(239, 68, 68, .35));
+            color: #EF4444;
+            filter: drop-shadow(0 2px 8px rgba(239, 68, 68, .45));
             transition: color .18s ease, transform .18s ease, filter .18s ease;
         }
         .slice-group:hover .slice-content,
@@ -225,20 +240,20 @@
         .slice-group:hover .slice-content i,
         .slice-group:focus-visible .slice-content i {
             color: #ffffff;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .4));
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .45));
         }
         .slice-content span {
             max-width: 100%;
-            font-family: Rajdhani, sans-serif;
-            font-size: clamp(10px, 1.55vw, 13px);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(10px, 1.55vw, 12.5px);
             font-weight: 800;
-            letter-spacing: .09em;
+            letter-spacing: .08em;
             line-height: 1;
             text-transform: uppercase;
             white-space: nowrap;
         }
 
-        /* Center Hub Merah Putih */
+        /* Center Hub Obsidian + Pure Red + Crisp White */
         .center-hub {
             position: absolute;
             z-index: 30;
@@ -248,14 +263,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 5px;
             padding: 8px;
-            border: 2px solid #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, .32);
             border-radius: 50%;
             background:
-                radial-gradient(circle at 50% 0%, rgba(220, 38, 38, .42) 0%, transparent 58%),
-                radial-gradient(circle at 50% 100%, rgba(255, 255, 255, .14) 0%, transparent 55%),
-                linear-gradient(160deg, #1b1e28 0%, #090a0e 78%);
+                radial-gradient(circle at 50% 0%, rgba(220, 38, 38, .45) 0%, transparent 58%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px),
+                linear-gradient(145deg, #0D0D10 0%, #050506 58%, #000000 100%);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+                inset 0 -1px 0 0 rgba(220, 38, 38, 0.35),
+                0 12px 28px -6px rgba(0, 0, 0, 0.92);
             color: #fff;
             cursor: pointer;
             transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
@@ -263,11 +282,14 @@
         .center-hub:hover {
             transform: scale(1.05);
             border-color: #ffffff;
-            box-shadow: 0 0 0 5px rgba(239, 68, 68, .28), 0 0 34px rgba(239, 68, 68, .48);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
+                0 0 0 4px rgba(239, 68, 68, .32),
+                0 0 28px rgba(239, 68, 68, .55);
         }
         .hub-logo-wrap {
             display: flex;
-            width: 68%;
+            width: 66%;
             aspect-ratio: 1 / 1;
             flex: 0 0 auto;
             align-items: center;
@@ -279,28 +301,28 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .75));
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .85));
             pointer-events: none;
         }
         .hub-logo-wrap i { font-size: clamp(22px, 4vw, 29px); color: #ffffff; }
         .hub-title {
-            font-family: Rajdhani, sans-serif;
-            font-size: clamp(10px, 1.8vw, 14px);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(10px, 1.8vw, 13.5px);
             font-weight: 800;
-            letter-spacing: .12em;
+            letter-spacing: .1em;
             line-height: 1;
             color: #ffffff;
         }
         .hub-hint {
             padding: 3px 9px;
-            border: 1px solid rgba(255, 255, 255, .55);
+            border: 1px solid rgba(255, 255, 255, .3);
             border-radius: 999px;
-            background: linear-gradient(135deg, #dc2626, #991b1b);
+            background: linear-gradient(135deg, #DC2626, #991B1B);
             color: #ffffff;
-            font: 800 7.5px/1.1 Inter, sans-serif;
+            font: 800 7.5px/1.1 'Plus Jakarta Sans', sans-serif;
             letter-spacing: .1em;
             white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(220, 38, 38, .45);
+            box-shadow: 0 0 12px rgba(220, 38, 38, .55);
         }
 
         /* ==================== 2. HEXAGON LAYOUT ==================== */
@@ -312,7 +334,6 @@
             align-items: center;
             justify-content: center;
             flex: 0 0 auto;
-            /* Radius & ukuran node dikendalikan satu variabel agar selalu simetris */
             --hex-radius: 35.2%;
             --hex-node: 19.5%;
         }
@@ -344,12 +365,12 @@
             justify-content: center;
             padding: 2px;
             border: 0;
-            background: linear-gradient(150deg, #ef4444 0%, #ffffff 52%, rgba(255, 255, 255, .25) 100%);
+            background: linear-gradient(150deg, #EF4444 0%, rgba(255, 255, 255, .45) 52%, rgba(220, 38, 38, .35) 100%);
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
             color: #fff;
             cursor: pointer;
             transform: translate(-50%, -50%);
-            filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .65));
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .88));
             transition: transform .18s ease, filter .18s ease, background .18s ease;
             animation: hexNodeEnter .26s cubic-bezier(.16, 1, .3, 1);
         }
@@ -359,8 +380,8 @@
         }
         .hex-node:hover, .hex-node:focus-visible {
             transform: translate(-50%, -50%) scale(1.08);
-            background: linear-gradient(150deg, #ffffff 0%, #ef4444 100%);
-            filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .7)) drop-shadow(0 0 16px rgba(239, 68, 68, .55));
+            background: linear-gradient(150deg, #ffffff 0%, #EF4444 100%);
+            filter: drop-shadow(0 12px 26px rgba(0, 0, 0, .85)) drop-shadow(0 0 16px rgba(239, 68, 68, .65));
         }
         .hex-node:active { transform: translate(-50%, -50%) scale(.97); }
         .hex-node-inner {
@@ -374,12 +395,15 @@
             padding: 4px;
             overflow: hidden;
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-            background: linear-gradient(160deg, #191c25, #0a0b10);
+            background-color: #050506;
+            background-image:
+                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
             color: #fff;
             transition: background .18s ease, color .18s ease;
         }
         .hex-node:hover .hex-node-inner, .hex-node:focus-visible .hex-node-inner {
-            background: linear-gradient(155deg, #dc2626 0%, #991b1b 100%);
+            background: linear-gradient(145deg, #DC2626 0%, #991B1B 100%);
             color: #ffffff;
         }
         .hex-node-inner i {
@@ -389,22 +413,23 @@
             flex: 0 0 auto;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(239, 68, 68, .35);
-            border-radius: clamp(6px, 1.2vmin, 9px);
-            background: rgba(239, 68, 68, .12);
-            color: #ef4444;
-            font-size: clamp(11px, 2.2vmin, 16px);
+            border: 1px solid rgba(255, 255, 255, .28);
+            border-radius: clamp(7px, 1.3vmin, 10px);
+            background: linear-gradient(135deg, #DC2626, #991B1B);
+            color: #ffffff;
+            font-size: clamp(11px, 2.2vmin, 15px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .55);
             transition: color .18s ease, background .18s ease, border-color .18s ease;
         }
         .hex-node:hover .hex-node-inner i, .hex-node:focus-visible .hex-node-inner i {
-            border-color: rgba(255, 255, 255, .45);
+            border-color: #ffffff;
             background: #ffffff;
-            color: #dc2626;
+            color: #DC2626;
         }
         .hex-node-inner span {
             max-width: 100%;
             color: inherit;
-            font: 800 clamp(8px, 1.55vmin, 11.5px)/1 Rajdhani, sans-serif;
+            font: 800 clamp(8px, 1.55vmin, 11px)/1 'Plus Jakarta Sans', sans-serif;
             letter-spacing: .04em;
             text-align: center;
             text-transform: uppercase;
@@ -412,16 +437,16 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* Center Hub berbentuk Heksagon agar serasi dengan node sekitarnya */
+        /* Center Hub berbentuk Heksagon */
         .hex-center-hub {
             width: 27%;
             aspect-ratio: 1 / 1;
             border: 0;
             border-radius: 0;
             padding: 2.5px;
-            background: linear-gradient(150deg, #ffffff 0%, #ef4444 50%, #ffffff 100%);
+            background: linear-gradient(150deg, #ffffff 0%, #EF4444 50%, #ffffff 100%);
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-            filter: drop-shadow(0 0 22px rgba(239, 68, 68, .45));
+            filter: drop-shadow(0 0 22px rgba(239, 68, 68, .55));
         }
         .hex-center-hub-inner {
             display: flex;
@@ -433,9 +458,11 @@
             gap: 4px;
             padding: 8px;
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-            background:
+            background-color: #050506;
+            background-image:
                 radial-gradient(circle at 50% 0%, rgba(220, 38, 38, .48) 0%, transparent 60%),
-                linear-gradient(160deg, #1b1e28 0%, #090a0e 82%);
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px),
+                linear-gradient(145deg, #0D0D10 0%, #050506 82%);
         }
         .hex-center-hub .hub-logo-wrap { width: 54%; }
 
@@ -452,7 +479,6 @@
             gap: clamp(12px, 2.2vmin, 20px);
             padding-inline: 4px;
         }
-        /* Dock = flex row; kartu dinaikkan dengan --lift (kurva parabola), bukan posisi absolut */
         #arc-items-container {
             position: relative;
             display: flex;
@@ -478,24 +504,39 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: clamp(5px, 1vmin, 8px);
+            gap: clamp(6px, 1.1vmin, 9px);
             padding: 8px 4px;
-            border: 1px solid rgba(255, 255, 255, .2);
-            border-top: 2px solid rgba(239, 68, 68, .75);
-            border-radius: clamp(14px, 2vmin, 18px);
-            background: linear-gradient(160deg, rgba(24, 27, 36, .96), rgba(10, 11, 16, .98));
-            box-shadow: 0 12px 28px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .25);
+            border-radius: 16px;
+            background-color: #050506;
+            background-image:
+                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(220, 38, 38, 0.25),
+                0 12px 28px -6px rgba(0, 0, 0, 0.92);
             color: #fff;
             cursor: pointer;
+            overflow: hidden;
             transform: translateY(calc(var(--lift, 0px) * -1));
             transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, color .18s ease;
             animation: dockItemEnter .26s cubic-bezier(.16, 1, .3, 1);
+        }
+        .arc-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 14px;
+            right: 14px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #EF4444, transparent);
+            pointer-events: none;
         }
         @keyframes dockItemEnter {
             from { opacity: 0; transform: translateY(calc(var(--lift, 0px) * -1)) scale(.88); }
             to   { opacity: 1; transform: translateY(calc(var(--lift, 0px) * -1)) scale(1); }
         }
-        /* Saat window di-resize jangan ulangi animasi masuk */
         body.is-resizing #layout-circle,
         body.is-resizing #layout-hexagon,
         body.is-resizing #layout-arc,
@@ -506,9 +547,15 @@
             z-index: 5;
             transform: translateY(calc(var(--lift, 0px) * -1 - 8px)) scale(1.06);
             border-color: #ffffff;
-            background: linear-gradient(155deg, #dc2626 0%, #991b1b 100%);
+            background: linear-gradient(145deg, #DC2626 0%, #991B1B 100%);
             color: #ffffff;
-            box-shadow: 0 14px 30px rgba(0, 0, 0, .6), 0 0 24px rgba(239, 68, 68, .5);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
+                0 14px 30px rgba(0, 0, 0, .85),
+                0 0 22px rgba(239, 68, 68, .65);
+        }
+        .arc-item:hover::before, .arc-item:focus-visible::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .75), transparent);
         }
         .arc-icon {
             display: flex;
@@ -517,22 +564,23 @@
             flex: 0 0 auto;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(239, 68, 68, .35);
-            border-radius: clamp(9px, 1.6vmin, 12px);
-            background: rgba(239, 68, 68, .12);
-            color: #ef4444;
-            font-size: clamp(15px, 2.4vmin, 18px);
+            border: 1px solid rgba(255, 255, 255, .3);
+            border-radius: 12px;
+            background: linear-gradient(135deg, #DC2626, #991B1B);
+            color: #ffffff;
+            font-size: clamp(14px, 2.3vmin, 17px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .6);
             transition: all .18s ease;
         }
         .arc-item:hover .arc-icon, .arc-item:focus-visible .arc-icon {
             border-color: #ffffff;
             background: #ffffff;
-            color: #dc2626;
+            color: #DC2626;
         }
         .arc-item-label {
             max-width: 100%;
-            font: 800 clamp(10px, 1.9vmin, 12px)/1 Rajdhani, sans-serif;
-            letter-spacing: .07em;
+            font: 800 clamp(10px, 1.9vmin, 11.5px)/1 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: .06em;
             text-align: center;
             text-transform: uppercase;
             white-space: nowrap;
@@ -559,7 +607,7 @@
             height: clamp(70px, 17vmin, 96px);
             min-width: 0;
             padding: 7px 4px;
-            border-radius: 15px;
+            border-radius: 16px;
             transform: none;
         }
         #arc-items-container.is-compact.cols-3 .arc-item {
@@ -574,8 +622,9 @@
             font-size: clamp(13px, 3.2vmin, 16px);
             border-radius: 10px;
         }
-        #arc-items-container.is-compact .arc-item-label { font-size: clamp(9px, 1.6vmin, 12px); }
+        #arc-items-container.is-compact .arc-item-label { font-size: clamp(9px, 1.6vmin, 11.5px); }
 
+        /* Tombol Close Dock bergaya Kapsul Obsidian HUD */
         .arc-close-button {
             position: relative;
             z-index: 6;
@@ -585,31 +634,47 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            padding: 8px 24px;
-            border: 1.5px solid rgba(255, 255, 255, .65);
-            border-left: 4px solid #dc2626;
-            border-radius: 16px;
-            background: linear-gradient(145deg, rgba(24, 27, 36, .98), rgba(10, 11, 16, .98));
+            padding: 8px 22px;
+            border: 1px solid rgba(255, 255, 255, .25);
+            border-radius: 9999px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
             color: #fff;
-            box-shadow: 0 10px 26px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .15);
+            overflow: hidden;
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(220, 38, 38, 0.25),
+                0 12px 28px -6px rgba(0, 0, 0, 0.92);
             cursor: pointer;
             transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+        .arc-close-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 24px;
+            right: 24px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #EF4444, transparent);
+            pointer-events: none;
         }
         .arc-close-button:hover {
             transform: translateY(-2px);
             border-color: #ffffff;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, .65), 0 0 22px rgba(239, 68, 68, .38);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+                0 12px 28px rgba(0, 0, 0, .9),
+                0 0 20px rgba(239, 68, 68, .45);
         }
-        .arc-close-button .hub-logo-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
+        .arc-close-button .hub-logo-wrap { width: 38px; height: 38px; flex: 0 0 38px; }
         .arc-close-button .center-hub-logo { width: 100%; height: 100%; }
-        .arc-close-button .hub-logo-wrap i { font-size: 20px; color: #ef4444; }
-        .arc-close-button .hub-title { font-size: 14px; letter-spacing: .1em; color: #ffffff; }
+        .arc-close-button .hub-logo-wrap i { font-size: 19px; color: #EF4444; }
+        .arc-close-button .hub-title { font-size: 13px; letter-spacing: .08em; color: #ffffff; }
         .arc-close-button .hub-hint {
             display: inline-block;
-            margin-top: 4px;
+            margin-top: 3px;
             border: 0;
             background: transparent;
-            color: #fca5a5;
+            color: #FCA5A5;
             padding: 0;
             text-align: left;
             box-shadow: none;
@@ -639,19 +704,124 @@
             display: none;
             position: relative;
             flex: 0 0 auto;
-            transform: translate(var(--sp-dx, 0px), var(--sp-dy, 0px)) scale(var(--sp-scale, 1));
+            transform: translate3d(var(--sp-dx, 0px), var(--sp-dy, 0px), 0) scale(var(--sp-scale, 1));
             transform-origin: center;
+            will-change: transform;
         }
         .speedo-variant.is-active { display: block; }
+        #speedo-layer.is-dragging {
+            z-index: 65;
+            background: rgba(5, 5, 6, .42);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
         #speedo-layer.is-dragging .speedo-variant {
             pointer-events: auto;
+            touch-action: none;
             cursor: grab;
-
-            outline: 2px dashed rgba(239, 68, 68, .8);
+            outline: 2px dashed rgba(239, 68, 68, .9);
             outline-offset: 10px;
-            border-radius: 20px;
+            border-radius: 22px;
+            box-shadow: 0 0 32px rgba(220, 38, 38, .35);
+            transition: none;
         }
-        #speedo-layer.is-dragging .speedo-variant:active { cursor: grabbing; }
+        #speedo-layer.is-dragging .speedo-variant.is-active-drag {
+            cursor: grabbing;
+            outline-color: #ffffff;
+            outline-style: solid;
+            box-shadow: 0 0 40px rgba(239, 68, 68, .65);
+        }
+
+        /* Floating Bar Kontrol Geser & Ukuran Langsung di Layar */
+        #speedo-drag-toolbar {
+            position: fixed;
+            top: max(14px, env(safe-area-inset-top));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 70;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border: 1px solid rgba(255, 255, 255, .28);
+            border-radius: 9999px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, .25),
+                0 12px 30px rgba(0, 0, 0, .92),
+                0 0 22px rgba(220, 38, 38, .4);
+            pointer-events: auto;
+        }
+        #speedo-drag-toolbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 22px;
+            right: 22px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #EF4444, transparent);
+            pointer-events: none;
+        }
+        #speedo-layer.is-dragging #speedo-drag-toolbar {
+            display: flex;
+            animation: menuEnter .2s cubic-bezier(.16, 1, .3, 1) both;
+        }
+        .sp-tool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            padding: 0 9px;
+            border: 1px solid rgba(255, 255, 255, .22);
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, .06);
+            color: #fff;
+            font: 800 12px/1 'Plus Jakarta Sans', sans-serif;
+            cursor: pointer;
+            transition: background .15s ease, border-color .15s ease, transform .12s ease;
+        }
+        .sp-tool-btn:hover {
+            border-color: #EF4444;
+            background: rgba(220, 38, 38, .28);
+        }
+        .sp-tool-btn:active { transform: scale(.93); }
+        .sp-tool-btn.primary {
+            border-color: rgba(255, 255, 255, .35);
+            background: linear-gradient(135deg, #DC2626, #991B1B);
+            padding: 0 14px;
+            letter-spacing: .06em;
+            box-shadow: 0 0 12px rgba(220, 38, 38, .55);
+        }
+        .sp-tool-readout {
+            min-width: 44px;
+            text-align: center;
+            font: 800 11.5px/1 'Plus Jakarta Sans', sans-serif;
+            color: #fff;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Stepper Size di Settings Modal */
+        .size-stepper-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            border: 1px solid rgba(255, 255, 255, .24);
+            border-radius: 10px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            color: #fff;
+            font: 800 14px/1 'Plus Jakarta Sans', sans-serif;
+            cursor: pointer;
+            transition: border-color .15s ease, background .15s ease, transform .12s ease;
+        }
+        .size-stepper-btn:hover {
+            border-color: #EF4444;
+            background: linear-gradient(135deg, #DC2626, #991B1B);
+        }
+        .size-stepper-btn:active { transform: scale(.92); }
 
         @keyframes spEnter {
             from { opacity: 0; transform: translateY(10px) scale(.96); }
@@ -662,9 +832,9 @@
         /* ---------- Variant A : Two-Pod ---------- */
         .twopod {
             --w: clamp(300px, 28vw, 430px);
-            --red: #e5092f;
-            --red2: #ff405b;
-            --muted: #8f96a3;
+            --red: #DC2626;
+            --red2: #EF4444;
+            --muted: #9ca3af;
             width: var(--w);
             aspect-ratio: 480 / 262;
             isolation: isolate;
@@ -674,27 +844,27 @@
             position: relative;
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 14px 26px rgba(0, 0, 0, .85));
+            filter: drop-shadow(0 12px 28px rgba(0, 0, 0, .92));
             transition: filter .22s ease;
         }
         .twopod .cluster-shell.shift-halo {
-            filter: drop-shadow(0 14px 26px rgba(0, 0, 0, .85)) drop-shadow(0 0 18px rgba(229, 9, 47, .55));
+            filter: drop-shadow(0 12px 28px rgba(0, 0, 0, .92)) drop-shadow(0 0 18px rgba(239, 68, 68, .65));
         }
         .twopod .dial { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
         .twopod .arc { fill: none; stroke-linecap: round; transition: stroke-dashoffset .13s cubic-bezier(.2, .8, .2, 1); }
         .twopod .tick { stroke-linecap: round; }
-        .twopod .scale-num { font-family: 'Arial Narrow', Arial, sans-serif; font-weight: 800; font-size: 10px; fill: #c8ccd4; text-anchor: middle; }
+        .twopod .scale-num { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 9.5px; fill: #d1d5db; text-anchor: middle; }
         .twopod .scale-num.red { fill: var(--red2); }
         .twopod .needle { transform-box: view-box; will-change: transform; }
         .twopod #tp-needleSpeed { transform-origin: 128px 126px; transition: transform .15s cubic-bezier(.18, .75, .22, 1); }
         .twopod #tp-needleRpm { transform-origin: 352px 126px; transition: transform .12s cubic-bezier(.18, .75, .22, 1); }
-        .twopod .signal { fill: none; stroke: rgba(255, 255, 255, .16); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; transition: stroke .15s; }
-        .twopod .signal.signal-active { stroke: var(--red2); filter: drop-shadow(0 0 5px var(--red)); animation: spBlink .5s infinite; }
-        .twopod .readout-value { font-family: 'Arial Narrow', Impact, Arial, sans-serif; font-weight: 900; fill: #fff; text-anchor: middle; font-variant-numeric: tabular-nums; }
-        .twopod #tp-speedValue { font-size: 42px; letter-spacing: -1.3px; paint-order: stroke; stroke: #04050a; stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: round; }
-        .twopod .readout-unit { font-family: Inter, 'Segoe UI', Arial, sans-serif; font-weight: 800; font-size: 9.5px; letter-spacing: .42em; fill: var(--red2); text-anchor: middle; }
-        .twopod #tp-gearValue { font-size: 27px; letter-spacing: -.5px; fill: #fff; paint-order: stroke; stroke: rgba(120, 0, 22, .55); stroke-width: 1.6; stroke-linejoin: round; }
-        .twopod #tp-rpmValueBox { font-family: 'Arial Narrow', Arial, sans-serif; font-weight: 700; font-size: 10.5px; letter-spacing: .08em; fill: var(--muted); text-anchor: middle; font-variant-numeric: tabular-nums; }
+        .twopod .signal { fill: none; stroke: rgba(255, 255, 255, .2); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; transition: stroke .15s; }
+        .twopod .signal.signal-active { stroke: var(--red2); filter: drop-shadow(0 0 6px var(--red)); animation: spBlink .5s infinite; }
+        .twopod .readout-value { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; fill: #fff; text-anchor: middle; font-variant-numeric: tabular-nums; }
+        .twopod #tp-speedValue { font-size: 40px; letter-spacing: -1.3px; paint-order: stroke; stroke: #050506; stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: round; }
+        .twopod .readout-unit { font-family: Inter, sans-serif; font-weight: 800; font-size: 9px; letter-spacing: .38em; fill: var(--red2); text-anchor: middle; }
+        .twopod #tp-gearValue { font-size: 25px; letter-spacing: -.5px; fill: #fff; paint-order: stroke; stroke: rgba(153, 27, 27, .65); stroke-width: 1.6; stroke-linejoin: round; }
+        .twopod #tp-rpmValueBox { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: .08em; fill: var(--muted); text-anchor: middle; font-variant-numeric: tabular-nums; }
         .twopod #tp-rpmValue { fill: #fff; font-weight: 800; }
         .twopod .shift-bar {
             position: absolute;
@@ -702,22 +872,33 @@
             transform: translateX(-50%);
             display: flex;
             gap: calc(var(--w) * .008);
-            padding: calc(var(--w) * .009) calc(var(--w) * .016);
+            padding: calc(var(--w) * .009) calc(var(--w) * .018);
             border-radius: 999px;
-            background: linear-gradient(180deg, rgba(12, 13, 18, .98), rgba(4, 5, 8, .98));
-            border: 1px solid rgba(255, 255, 255, .14);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .07);
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            border: 1px solid rgba(255, 255, 255, .25);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, .22),
+                inset 0 -1px 0 0 rgba(220, 38, 38, .25),
+                0 10px 24px rgba(0, 0, 0, .9);
             z-index: 6;
+            overflow: hidden;
+        }
+        .twopod .shift-bar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 10px; right: 10px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #EF4444, transparent);
         }
         .twopod .shift-led {
             width: calc(var(--w) * .0155);
             height: calc(var(--w) * .0095);
             border-radius: 999px;
-            background: rgba(255, 255, 255, .11);
+            background: rgba(255, 255, 255, .14);
             transition: background .08s, box-shadow .08s;
         }
-        .twopod .shift-led.on.w { background: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, .9); }
-        .twopod .shift-led.on.r { background: var(--red2); box-shadow: 0 0 8px var(--red); }
+        .twopod .shift-led.on.w { background: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, .95); }
+        .twopod .shift-led.on.r { background: var(--red2); box-shadow: 0 0 10px var(--red); }
         .twopod .bottom-deck {
             position: absolute;
             left: 2.5%; right: 2.5%; bottom: 0;
@@ -727,19 +908,25 @@
             justify-content: space-between;
             gap: calc(var(--w) * .02);
             padding: 0 calc(var(--w) * .028);
-            border-radius: calc(var(--w) * .026);
-            background: linear-gradient(180deg, rgba(13, 14, 20, .97), rgba(4, 5, 9, .99));
-            border: 1px solid rgba(255, 255, 255, .13);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 4px 14px rgba(0, 0, 0, .6);
+            border-radius: 16px;
+            background-color: #050506;
+            background-image:
+                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
+            border: 1px solid rgba(255, 255, 255, .25);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(220, 38, 38, 0.25),
+                0 12px 28px -6px rgba(0, 0, 0, 0.92);
             z-index: 5;
         }
         .twopod .bottom-deck::before {
             content: '';
             position: absolute;
-            left: calc(var(--w) * .035); right: calc(var(--w) * .035);
-            top: -1px;
-            height: 1.5px;
-            background: linear-gradient(90deg, transparent, rgba(229, 9, 47, .85), transparent);
+            left: calc(var(--w) * .045); right: calc(var(--w) * .045);
+            top: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .45), transparent);
             border-radius: 2px;
         }
         .twopod .wing {
@@ -748,42 +935,42 @@
             gap: calc(var(--w) * .012);
             min-width: calc(var(--w) * .185);
             padding: calc(var(--w) * .006) calc(var(--w) * .012);
-            border-radius: calc(var(--w) * .016);
-            background: rgba(255, 255, 255, .035);
-            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .14);
             transition: border-color .2s, background .2s;
         }
         .twopod .wing-icon { width: calc(var(--w) * .026); height: calc(var(--w) * .026); color: var(--red2); flex: 0 0 auto; display: grid; place-items: center; }
-        .twopod .wing-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+        .twopod .wing-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
         .twopod .wing-body { display: flex; flex-direction: column; gap: calc(var(--w) * .005); flex: 1 1 auto; min-width: 0; }
-        .twopod .wing-value { font-family: 'Arial Narrow', Arial, sans-serif; font-weight: 800; font-size: calc(var(--w) * .021); line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
-        .twopod .bar { display: block; width: 100%; height: calc(var(--w) * .0075); border-radius: 999px; background: rgba(255, 255, 255, .12); overflow: hidden; }
-        .twopod .bar i { display: block; height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--red2), #ffffff); transition: width .25s cubic-bezier(.2, .8, .2, 1); }
+        .twopod .wing-value { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: calc(var(--w) * .02); line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+        .twopod .bar { display: block; width: 100%; height: calc(var(--w) * .0075); border-radius: 999px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+        .twopod .bar i { display: block; height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, #EF4444, #ffffff); transition: width .25s cubic-bezier(.2, .8, .2, 1); }
         .twopod .wing.right { flex-direction: row-reverse; text-align: right; }
         .twopod .wing.right .wing-body { align-items: flex-end; }
-        .twopod .wing.low { border-color: rgba(229, 9, 47, .6); background: rgba(229, 9, 47, .10); }
-        .twopod .wing.low .wing-icon, .twopod .wing.low .wing-value { color: var(--red2); filter: drop-shadow(0 0 5px rgba(229, 9, 47, .8)); }
+        .twopod .wing.low { border-color: rgba(239, 68, 68, .75); background: rgba(220, 38, 38, .14); }
+        .twopod .wing.low .wing-icon, .twopod .wing.low .wing-value { color: var(--red2); filter: drop-shadow(0 0 6px rgba(239, 68, 68, .85)); }
         .twopod .status-dock {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: calc(var(--w) * .017);
             padding: calc(var(--w) * .007) calc(var(--w) * .018);
-            border-radius: calc(var(--w) * .02);
-            background: rgba(255, 255, 255, .035);
-            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 9999px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            border: 1px solid rgba(255, 255, 255, .2);
         }
-        .twopod .status-icon { width: calc(var(--w) * .026); height: calc(var(--w) * .026); display: grid; place-items: center; color: rgba(255, 255, 255, .20); transition: color .2s, filter .2s; }
-        .twopod .status-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
-        .twopod .status-icon.on { color: #fff; filter: drop-shadow(0 0 4px rgba(255, 255, 255, .5)); }
+        .twopod .status-icon { width: calc(var(--w) * .026); height: calc(var(--w) * .026); display: grid; place-items: center; color: rgba(255, 255, 255, .22); transition: color .2s, filter .2s; }
+        .twopod .status-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+        .twopod .status-icon.on { color: #fff; filter: drop-shadow(0 0 4px rgba(255, 255, 255, .55)); }
         .twopod .status-icon.warn { color: var(--red2); filter: drop-shadow(0 0 6px var(--red)); animation: spBlink .85s infinite; }
 
         /* ---------- Variant B : One-Pod ---------- */
         .onepod {
             --size: clamp(150px, 14vw, 180px);
-            --red: #e5092f;
-            --red2: #ff405b;
-            --muted: #9aa0ab;
+            --red: #DC2626;
+            --red2: #EF4444;
+            --muted: #9ca3af;
             position: relative;
             width: var(--size);
             height: var(--size);
@@ -794,23 +981,27 @@
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            background: radial-gradient(circle at 50% 25%, rgba(22, 23, 28, .96), rgba(6, 6, 9, .98) 76%);
-            border: 1px solid rgba(255, 255, 255, .15);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .68), inset 0 1px 0 rgba(255, 255, 255, .12);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background-color: #050506;
+            background-image:
+                radial-gradient(circle at 50% 25%, #0D0D10 0%, #050506 60%, #000000 100%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
+            border: 1px solid rgba(255, 255, 255, .25);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(220, 38, 38, 0.25),
+                0 12px 28px -6px rgba(0, 0, 0, 0.92);
             transition: box-shadow .2s, border-color .2s;
         }
         .onepod .cluster-housing.shift-halo {
-            border-color: rgba(229, 9, 47, .9);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .68), 0 0 18px rgba(229, 9, 47, .5), inset 0 0 14px rgba(229, 9, 47, .25);
+            border-color: #EF4444;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .92), 0 0 20px rgba(239, 68, 68, .6), inset 0 0 14px rgba(220, 38, 38, .3);
         }
         .onepod .dial { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
-        .onepod .track { fill: none; stroke: rgba(255, 255, 255, .08); stroke-width: 9; stroke-linecap: round; }
-        .onepod .track.inner { stroke: rgba(255, 255, 255, .05); stroke-width: 4; }
+        .onepod .track { fill: none; stroke: rgba(255, 255, 255, .1); stroke-width: 9; stroke-linecap: round; }
+        .onepod .track.inner { stroke: rgba(255, 255, 255, .06); stroke-width: 4; }
         .onepod .arc { fill: none; stroke-linecap: round; transition: stroke-dashoffset .14s cubic-bezier(.2, .8, .2, 1); filter: url(#opGlow); }
         .onepod #op-speedArc { stroke: url(#opSpeedGrad); stroke-width: 9; }
-        .onepod #op-rpmArc { stroke: var(--red2); stroke-width: 4; opacity: .92; }
+        .onepod #op-rpmArc { stroke: var(--red2); stroke-width: 4; opacity: .95; }
         .onepod #op-healthArc, .onepod #op-fuelArc { stroke-width: 5; }
         .onepod .needle-transition { transform-origin: 175px 175px; transition: transform .14s cubic-bezier(.18, .75, .22, 1); will-change: transform; }
         .onepod .center-ui {
@@ -825,18 +1016,18 @@
             pointer-events: none;
         }
         .onepod .topline { width: 62%; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; }
-        .onepod .signal { font-size: 8px; color: rgba(255, 255, 255, .18); transition: color .15s, filter .15s; }
+        .onepod .signal { font-size: 8px; color: rgba(255, 255, 255, .22); transition: color .15s, filter .15s; }
         .onepod .signal.signal-active { color: var(--red2); filter: drop-shadow(0 0 5px var(--red)); animation: spBlink .55s infinite; }
         .onepod .gear {
-            min-width: 18px;
-            padding: 1.5px 6px;
+            min-width: 19px;
+            padding: 2px 6px;
             border-radius: 5px;
-            font: 800 9.5px/1.1 'Arial Narrow', Arial, sans-serif;
-            letter-spacing: .4px;
-            color: #fff;
-            background: linear-gradient(145deg, #ff405b, #9e001f);
-            border: 1px solid rgba(255, 255, 255, .24);
-            box-shadow: 0 2px 8px rgba(229, 9, 47, .38);
+            font: 800 9.5px/1 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: .5px;
+            color: #09090B;
+            background: #FFFFFF;
+            border-bottom: 2px solid #DC2626;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .65);
         }
         .onepod .readout {
             position: relative;
@@ -849,12 +1040,12 @@
             margin-bottom: 4px;
             padding: 3px 10px 4px;
             border-radius: 10px;
-            background: radial-gradient(ellipse at center, rgba(8, 9, 13, .88) 45%, transparent 100%);
+            background: radial-gradient(ellipse at center, rgba(5, 5, 6, .92) 45%, transparent 100%);
         }
-        .onepod .speed { font: 900 clamp(23px, 2.3vw, 29px)/.92 'Arial Narrow', Arial, sans-serif; letter-spacing: -.8px; color: #fff; text-shadow: 0 2px 10px rgba(0, 0, 0, .95); font-variant-numeric: tabular-nums; }
+        .onepod .speed { font: 800 clamp(22px, 2.2vw, 28px)/.95 'Plus Jakarta Sans', sans-serif; letter-spacing: -.8px; color: #fff; text-shadow: 0 2px 10px rgba(0, 0, 0, .95); font-variant-numeric: tabular-nums; }
         .onepod .unit { font-size: 6.5px; font-weight: 800; letter-spacing: .24em; color: var(--red2); margin-top: 2px; }
-        .onepod .rpm-mini { margin-top: 2px; font: 700 7px/1 monospace; color: var(--muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
-        .onepod .rpm-mini b { color: #eef0f5; font-weight: 700; }
+        .onepod .rpm-mini { margin-top: 2px; font: 700 7px/1 Inter, sans-serif; color: var(--muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+        .onepod .rpm-mini b { color: #fff; font-weight: 800; }
         .onepod .status-dock {
             position: relative;
             z-index: 2;
@@ -862,14 +1053,14 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 3px 7px;
-            border-radius: 16px;
-            background: rgba(0, 0, 0, .55);
-            border: 1px solid rgba(255, 255, 255, .1);
+            padding: 3px 8px;
+            border-radius: 9999px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            border: 1px solid rgba(255, 255, 255, .22);
         }
-        .onepod .status-icon { width: 9.5px; height: 9.5px; display: grid; place-items: center; color: rgba(255, 255, 255, .22); transition: color .2s, filter .2s; }
-        .onepod .status-icon svg, .onepod .wing-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
-        .onepod .status-icon.on { color: #fff; filter: drop-shadow(0 0 4px rgba(255, 255, 255, .5)); }
+        .onepod .status-icon { width: 9.5px; height: 9.5px; display: grid; place-items: center; color: rgba(255, 255, 255, .24); transition: color .2s, filter .2s; }
+        .onepod .status-icon svg, .onepod .wing-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+        .onepod .status-icon.on { color: #fff; filter: drop-shadow(0 0 4px rgba(255, 255, 255, .55)); }
         .onepod .status-icon.warn { color: var(--red2); filter: drop-shadow(0 0 5px var(--red)); animation: spBlink .8s infinite; }
         .onepod .wing {
             position: absolute;
@@ -877,18 +1068,18 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            padding: 3px 6px;
-            border-radius: 8px;
-            background: rgba(10, 11, 15, .95);
-            border: 1px solid rgba(255, 255, 255, .13);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .7);
+            padding: 3px 7px;
+            border-radius: 9999px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            border: 1px solid rgba(255, 255, 255, .25);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 6px 14px rgba(0, 0, 0, .85);
             z-index: 3;
         }
         .onepod .wing.left { left: 2%; }
         .onepod .wing.right { right: 2%; }
         .onepod .wing-icon { width: 10px; height: 10px; color: var(--red2); flex: 0 0 auto; }
-        .onepod .wing-value { font: 800 8px/1 monospace; color: #fff; font-variant-numeric: tabular-nums; }
-        .onepod .wing.low .wing-icon, .onepod .wing.low .wing-value { color: var(--red2); filter: drop-shadow(0 0 4px var(--red)); }
+        .onepod .wing-value { font: 800 8px/1 'Plus Jakarta Sans', sans-serif; color: #fff; font-variant-numeric: tabular-nums; }
+        .onepod .wing.low .wing-icon, .onepod .wing.low .wing-value { color: var(--red2); filter: drop-shadow(0 0 5px var(--red)); }
 
         /* ---------- Kontrol speedometer di Settings ---------- */
         .spu-chip {
@@ -897,22 +1088,22 @@
             justify-content: center;
             gap: 7px;
             padding: 11px 6px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            border-radius: 13px;
-            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .22);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
             color: #fff;
-            font: 800 12px/1 Rajdhani, sans-serif;
-            letter-spacing: .08em;
+            font: 800 11.5px/1 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: .07em;
             text-transform: uppercase;
             cursor: pointer;
             transition: all .18s ease;
         }
-        .spu-chip i { color: #ef4444; font-size: 13px; }
-        .spu-chip:hover { border-color: rgba(239, 68, 68, .65); transform: translateY(-1px); }
+        .spu-chip i { color: #EF4444; font-size: 13px; }
+        .spu-chip:hover { border-color: rgba(239, 68, 68, .75); transform: translateY(-1px); }
         .spu-chip.active {
-            border-color: #ef4444;
-            background: linear-gradient(90deg, rgba(220, 38, 38, .28), rgba(255, 255, 255, .07));
-            box-shadow: inset 0 0 16px rgba(220, 38, 38, .18);
+            border-color: #ffffff;
+            background: linear-gradient(135deg, #DC2626, #991B1B);
+            box-shadow: 0 0 14px rgba(220, 38, 38, .5);
         }
         .spu-chip.active i { color: #fff; }
         .spu-pos-grid { display: grid; grid-template-columns: repeat(3, 46px); justify-content: center; gap: 8px; }
@@ -921,16 +1112,16 @@
             width: 46px;
             height: 46px;
             place-items: center;
-            border: 1px solid rgba(255, 255, 255, .14);
-            border-radius: 11px;
-            background: rgba(255, 255, 255, .03);
-            color: rgba(255, 255, 255, .4);
+            border: 1px solid rgba(255, 255, 255, .22);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            color: rgba(255, 255, 255, .42);
             cursor: pointer;
             transition: all .18s ease;
         }
         .spu-pos::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-        .spu-pos:hover { border-color: rgba(239, 68, 68, .6); color: #fff; }
-        .spu-pos.active { border-color: #ef4444; background: rgba(220, 38, 38, .22); color: #fff; box-shadow: 0 0 14px rgba(239, 68, 68, .35); }
+        .spu-pos:hover { border-color: rgba(239, 68, 68, .75); color: #fff; }
+        .spu-pos.active { border-color: #ffffff; background: linear-gradient(135deg, #DC2626, #991B1B); color: #fff; box-shadow: 0 0 14px rgba(220, 38, 38, .55); }
 
         /* ==================== SETTINGS MODAL ==================== */
         #inline-settings-panel {
@@ -941,7 +1132,7 @@
             align-items: center;
             justify-content: center;
             padding: 16px;
-            background: rgba(0, 0, 0, .82);
+            background: rgba(0, 0, 0, .85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             opacity: 0;
@@ -949,18 +1140,38 @@
             transition: opacity .22s ease;
         }
         #inline-settings-panel.is-open { opacity: 1; pointer-events: auto; }
+        #inline-settings-panel.is-hud-editing {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
         .settings-card {
+            position: relative;
             width: min(460px, calc(100% - 20px));
             max-height: 88vmin;
             overflow-y: auto;
             padding: clamp(18px, 4vw, 26px);
             border: 1px solid rgba(255, 255, 255, .25);
-            border-top: 3px solid #dc2626;
-            border-radius: 24px;
-            background: linear-gradient(155deg, rgba(22, 25, 34, .99), rgba(9, 10, 14, .99));
-            box-shadow: 0 24px 70px rgba(0, 0, 0, .8), 0 0 36px rgba(220, 38, 38, .18);
+            border-radius: 20px;
+            background-color: #050506;
+            background-image:
+                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(220, 38, 38, 0.25),
+                0 12px 28px -6px rgba(0, 0, 0, 0.92);
         }
-        .settings-title { font: 800 21px/1 Rajdhani, sans-serif; letter-spacing: .08em; color: #ffffff; }
+        .settings-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 28px;
+            right: 28px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #EF4444, transparent);
+            pointer-events: none;
+        }
+        .settings-title { font: 800 20px/1 'Plus Jakarta Sans', sans-serif; letter-spacing: .06em; color: #ffffff; }
         .shape-option {
             display: flex;
             width: 100%;
@@ -968,56 +1179,60 @@
             justify-content: space-between;
             gap: 12px;
             padding: 13px 14px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            border-radius: 15px;
-            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 16px;
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, .14);
             text-align: left;
             cursor: pointer;
             transition: border-color .18s ease, background .18s ease, transform .18s ease;
         }
-        .shape-option:hover { transform: translateY(-1px); border-color: rgba(239, 68, 68, .65); }
+        .shape-option:hover { transform: translateY(-1px); border-color: rgba(239, 68, 68, .75); }
         .shape-option.active {
-            border-color: #ef4444;
-            background: linear-gradient(90deg, rgba(220, 38, 38, .22), rgba(255, 255, 255, .06));
-            box-shadow: inset 0 0 18px rgba(220, 38, 38, .14);
+            border-color: #EF4444;
+            background: linear-gradient(90deg, rgba(220, 38, 38, .25), rgba(13, 13, 16, .95));
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, .22), inset 0 0 18px rgba(220, 38, 38, .18);
         }
-        .shape-option-title { font: 800 14px/1.1 Rajdhani, sans-serif; color: #fff; }
-        .shape-option-desc { margin-top: 4px; font: 500 10px/1.35 Inter, sans-serif; color: rgba(255, 255, 255, .58); }
+        .shape-option-title { font: 800 13.5px/1.1 'Plus Jakarta Sans', sans-serif; color: #fff; }
+        .shape-option-desc { margin-top: 4px; font: 500 10px/1.35 Inter, sans-serif; color: rgba(255, 255, 255, .62); }
         .settings-action {
             width: 100%;
             min-height: 46px;
-            border: 1px solid #ffffff;
-            border-radius: 13px;
-            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border: 1px solid rgba(255, 255, 255, .3);
+            border-radius: 14px;
+            background: linear-gradient(135deg, #DC2626, #991B1B);
             color: #ffffff;
-            font: 800 14px Rajdhani, sans-serif;
-            letter-spacing: .12em;
+            font: 800 13.5px 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: .1em;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 8px 22px rgba(220, 38, 38, .35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 8px 22px rgba(220, 38, 38, .45);
             transition: filter .18s ease, transform .18s ease;
         }
-        .settings-action:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .settings-action:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .settings-toggle {
             min-width: 66px;
             padding: 7px 14px;
-            border: 1px solid #ffffff;
-            border-radius: 9px;
-            background: #dc2626;
+            border: 1px solid rgba(255, 255, 255, .3);
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #DC2626, #991B1B);
             color: #ffffff;
-            font: 800 11px Inter, sans-serif;
+            font: 800 11px 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: .06em;
             cursor: pointer;
+            box-shadow: 0 0 10px rgba(220, 38, 38, .45);
             transition: all .18s ease;
         }
         .settings-toggle.off {
-            border-color: rgba(255, 255, 255, .2);
-            background: #272b34;
+            border-color: rgba(255, 255, 255, .22);
+            background: linear-gradient(180deg, #111114 0%, #050506 100%);
             color: rgba(255, 255, 255, .65);
+            box-shadow: none;
         }
 
         .hidden { display: none !important; }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, .55); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, .65); border-radius: 10px; }
 
         /* ==================== RESPONSIVE & PORTRAIT HANDLING ==================== */
         @supports (padding: max(0px)) {
@@ -1064,40 +1279,48 @@
         /* Touch devices: reset hover states after tap */
         @media (hover: none), (pointer: coarse) {
             .slice-group:hover .slice-path {
-                fill: rgba(15, 17, 23, .95);
-                stroke: rgba(255, 255, 255, .24);
+                fill: url(#obsidianSliceGrad);
+                stroke: rgba(255, 255, 255, .25);
                 filter: none;
             }
             .slice-group:hover .slice-content { color: #ffffff; transform: none; }
-            .slice-group:hover .slice-content i { color: #ef4444; filter: none; }
+            .slice-group:hover .slice-content i { color: #EF4444; filter: none; }
             .hex-node:hover {
                 transform: translate(-50%, -50%);
-                background: linear-gradient(150deg, #ef4444 0%, #ffffff 52%, rgba(255, 255, 255, .25) 100%);
-                filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .65));
+                background: linear-gradient(150deg, #EF4444 0%, rgba(255, 255, 255, .45) 52%, rgba(220, 38, 38, .35) 100%);
+                filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .88));
             }
             .hex-node:hover .hex-node-inner {
-                background: linear-gradient(160deg, #191c25, #0a0b10);
+                background-color: #050506;
+                background-image:
+                    linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
                 color: #ffffff;
             }
             .hex-node:hover .hex-node-inner i {
-                border-color: rgba(239, 68, 68, .35);
-                background: rgba(239, 68, 68, .12);
-                color: #ef4444;
+                border-color: rgba(255, 255, 255, .28);
+                background: linear-gradient(135deg, #DC2626, #991B1B);
+                color: #ffffff;
             }
             .arc-item:hover {
                 z-index: 3;
                 transform: translateY(calc(var(--lift, 0px) * -1));
-                border-color: rgba(255, 255, 255, .2);
-                border-top-color: rgba(239, 68, 68, .75);
-                background: linear-gradient(160deg, rgba(24, 27, 36, .96), rgba(10, 11, 16, .98));
+                border-color: rgba(255, 255, 255, .25);
+                background-color: #050506;
+                background-image:
+                    linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
                 color: #ffffff;
-                box-shadow: 0 12px 28px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .14);
+                box-shadow:
+                    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                    inset 0 -1px 0 0 rgba(220, 38, 38, 0.25),
+                    0 12px 28px -6px rgba(0, 0, 0, 0.92);
             }
             #arc-items-container.is-compact .arc-item:hover { transform: none; }
             .arc-item:hover .arc-icon {
-                border-color: rgba(239, 68, 68, .35);
-                background: rgba(239, 68, 68, .12);
-                color: #ef4444;
+                border-color: rgba(255, 255, 255, .3);
+                background: linear-gradient(135deg, #DC2626, #991B1B);
+                color: #ffffff;
             }
             .center-hub:hover { transform: none; }
             .arc-close-button:hover { transform: none; }
@@ -1112,7 +1335,8 @@
         body[data-ui-mode="speedometer"] main,
         body[data-ui-mode="speedometer"] .hud-overlay,
         body[data-ui-mode="speedometer"] .hud-grid,
-        body[data-ui-mode="speedometer"] #inline-settings-panel { display: none !important; }    </style>
+        body[data-ui-mode="speedometer"] #inline-settings-panel { display: none !important; }
+    </style>
     <script>
         (function () {
             const applyMode = () => {
@@ -1123,13 +1347,30 @@
             if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyMode, { once: true });
             else applyMode();
         })();
-    </script></head>
+    </script>
+</head>
 <body>
     <div class="hud-overlay"></div>
     <div class="hud-grid"></div>
 
     <!-- SPEEDOMETER HUD -->
     <div id="speedo-layer" data-pos="bottom-right">
+        <!-- Toolbar Melayang Saat Mode Geser & Atur Ukuran Aktif -->
+        <div id="speedo-drag-toolbar" role="toolbar" aria-label="Atur posisi dan ukuran speedometer">
+            <span class="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-extrabold tracking-wider text-white/75 pr-1">
+                <i class="fa-solid fa-up-down-left-right text-[#EF4444]"></i> TARIK HUD
+            </span>
+            <button type="button" class="sp-tool-btn" onclick="stepSpeedoScale(-0.05)" title="Perkecil" aria-label="Perkecil speedometer">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+            <button type="button" id="sp-drag-scale-readout" class="sp-tool-btn sp-tool-readout" onclick="setSpeedoScale(1)" title="Reset ukuran ke 100%">100%</button>
+            <button type="button" class="sp-tool-btn" onclick="stepSpeedoScale(0.05)" title="Perbesar" aria-label="Perbesar speedometer">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <button type="button" class="sp-tool-btn" onclick="resetSpeedoOffset()" title="Reset posisi">RESET</button>
+            <button type="button" class="sp-tool-btn primary" onclick="toggleSpeedoDrag()">SELESAI</button>
+        </div>
+
         <div id="speedo-twopod" class="speedo-variant is-active" aria-hidden="true">
             <div class="twopod">
             <div id="tp-housingBezel" class="cluster-shell">
@@ -1138,29 +1379,28 @@
                 <svg class="dial" viewBox="0 0 480 262" aria-hidden="true">
                     <defs>
                         <radialGradient id="tpPodBg" cx="42%" cy="26%" r="78%">
-                            <stop offset="0%" stop-color="#1b1e27" />
-                            <stop offset="62%" stop-color="#0b0c11" />
-                            <stop offset="100%" stop-color="#04050a" />
+                            <stop offset="0%" stop-color="#0D0D10" />
+                            <stop offset="62%" stop-color="#050506" />
+                            <stop offset="100%" stop-color="#000000" />
                         </radialGradient>
                         <linearGradient id="tpBezelRim" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="rgba(255,255,255,0.30)" />
-                            <stop offset="46%" stop-color="rgba(229,9,47,0.50)" />
-                            <stop offset="100%" stop-color="rgba(255,255,255,0.12)" />
+                            <stop offset="0%" stop-color="rgba(255,255,255,0.28)" />
+                            <stop offset="46%" stop-color="rgba(239,68,68,0.55)" />
+                            <stop offset="100%" stop-color="rgba(255,255,255,0.16)" />
                         </linearGradient>
                         <linearGradient id="tpSportGrad" x1="0%" y1="100%" x2="100%" y2="0%">
                             <stop offset="0%" stop-color="#ffffff" />
-                            <stop offset="56%" stop-color="#ff405b" />
-                            <stop offset="100%" stop-color="#9e001f" />
+                            <stop offset="56%" stop-color="#EF4444" />
+                            <stop offset="100%" stop-color="#991B1B" />
                         </linearGradient>
                         <linearGradient id="tpGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#ff556d" />
-                            <stop offset="55%" stop-color="#e5092f" />
-                            <stop offset="100%" stop-color="#7d0019" />
+                            <stop offset="0%" stop-color="#DC2626" />
+                            <stop offset="100%" stop-color="#991B1B" />
                         </linearGradient>
                         <linearGradient id="tpDeckSeam" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="rgba(229,9,47,0)" />
-                            <stop offset="45%" stop-color="rgba(229,9,47,0.55)" />
-                            <stop offset="100%" stop-color="rgba(229,9,47,0)" />
+                            <stop offset="0%" stop-color="rgba(239,68,68,0)" />
+                            <stop offset="45%" stop-color="rgba(239,68,68,0.65)" />
+                            <stop offset="100%" stop-color="rgba(239,68,68,0)" />
                         </linearGradient>
                         <filter id="tpGlow" x="-30%" y="-30%" width="160%" height="160%">
                             <feGaussianBlur stdDeviation="2.1" result="b" />
@@ -1173,21 +1413,21 @@
                     </defs>
 
                     <line x1="240" y1="66" x2="240" y2="188" stroke="url(#tpDeckSeam)" stroke-width="1.4" stroke-linecap="round" />
-                    <circle cx="240" cy="126" r="2.6" fill="rgba(255,255,255,.35)" />
+                    <circle cx="240" cy="126" r="2.6" fill="#EF4444" />
 
                     <g id="tp-podLeft">
                         <circle cx="128" cy="126" r="94" fill="url(#tpPodBg)" stroke="url(#tpBezelRim)" stroke-width="2.4" />
-                        <circle cx="128" cy="126" r="87" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <circle cx="128" cy="126" r="87" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1" />
                         <g transform="rotate(-210 128 126)">
-                            <circle cx="128" cy="126" r="80" fill="none" stroke="rgba(255,255,255,.075)" stroke-width="7" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="167.55" />
+                            <circle cx="128" cy="126" r="80" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="7" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="167.55" />
                             <circle id="tp-speedArc" class="arc" cx="128" cy="126" r="80" stroke="url(#tpSportGrad)" stroke-width="7" stroke-dasharray="502.65" stroke-dashoffset="502.65" filter="url(#tpGlow)" />
                         </g>
                         <g id="tp-ticksSpeed"></g>
                         <g id="tp-needleSpeed" class="needle" style="transform: rotate(-120deg)">
-                            <path d="M125.4 140 L126.9 60 L129.1 60 L130.6 140 Z" fill="#e8ebf2" filter="url(#tpGlow)" />
-                            <path d="M126.9 126 L128 62 L129.1 126 Z" fill="#ff405b" />
-                            <circle cx="128" cy="126" r="9" fill="#0a0b10" stroke="rgba(255,255,255,.30)" stroke-width="1.4" />
-                            <circle cx="128" cy="126" r="4.6" fill="#e5092f" />
+                            <path d="M125.4 140 L126.9 60 L129.1 60 L130.6 140 Z" fill="#ffffff" filter="url(#tpGlow)" />
+                            <path d="M126.9 126 L128 62 L129.1 126 Z" fill="#EF4444" />
+                            <circle cx="128" cy="126" r="9" fill="#050506" stroke="rgba(255,255,255,.32)" stroke-width="1.4" />
+                            <circle cx="128" cy="126" r="4.6" fill="#DC2626" />
                             <circle cx="128" cy="126" r="1.7" fill="#fff" />
                         </g>
                         <text id="tp-speedValue" class="readout-value" x="128" y="178">0</text>
@@ -1196,20 +1436,20 @@
 
                     <g id="tp-podRight">
                         <circle cx="352" cy="126" r="94" fill="url(#tpPodBg)" stroke="url(#tpBezelRim)" stroke-width="2.4" />
-                        <circle cx="352" cy="126" r="87" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <circle cx="352" cy="126" r="87" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1" />
                         <g transform="rotate(-210 352 126)">
-                            <circle cx="352" cy="126" r="80" fill="none" stroke="rgba(255,255,255,.075)" stroke-width="7" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="167.55" />
+                            <circle cx="352" cy="126" r="80" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="7" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="167.55" />
                             <circle id="tp-rpmArc" class="arc" cx="352" cy="126" r="80" stroke="url(#tpSportGrad)" stroke-width="7" stroke-dasharray="502.65" stroke-dashoffset="502.65" filter="url(#tpGlow)" />
                         </g>
                         <g id="tp-ticksRpm"></g>
                         <g id="tp-needleRpm" class="needle" style="transform: rotate(-120deg)">
-                            <path d="M349.4 140 L350.9 60 L353.1 60 L354.6 140 Z" fill="#e8ebf2" filter="url(#tpGlow)" />
-                            <path d="M350.9 126 L352 62 L353.1 126 Z" fill="#ff405b" />
-                            <circle cx="352" cy="126" r="9" fill="#0a0b10" stroke="rgba(255,255,255,.30)" stroke-width="1.4" />
-                            <circle cx="352" cy="126" r="4.6" fill="#e5092f" />
+                            <path d="M349.4 140 L350.9 60 L353.1 60 L354.6 140 Z" fill="#ffffff" filter="url(#tpGlow)" />
+                            <path d="M350.9 126 L352 62 L353.1 126 Z" fill="#EF4444" />
+                            <circle cx="352" cy="126" r="9" fill="#050506" stroke="rgba(255,255,255,.32)" stroke-width="1.4" />
+                            <circle cx="352" cy="126" r="4.6" fill="#DC2626" />
                             <circle cx="352" cy="126" r="1.7" fill="#fff" />
                         </g>
-                        <rect x="327" y="143" width="50" height="36" rx="9" fill="url(#tpGearGrad)" stroke="rgba(255,255,255,.34)" stroke-width="1.2" filter="url(#tpSoftGlow)" />
+                        <rect x="327" y="143" width="50" height="36" rx="10" fill="url(#tpGearGrad)" stroke="rgba(255,255,255,.32)" stroke-width="1.2" filter="url(#tpSoftGlow)" />
                         <text id="tp-gearValue" class="readout-value" x="352" y="169">P</text>
                         <text id="tp-rpmValueBox" x="352" y="197"><tspan id="tp-rpmValue">800</tspan> RPM</text>
                     </g>
@@ -1264,11 +1504,11 @@
                     <defs>
                         <linearGradient id="opSpeedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#ffffff" />
-                            <stop offset="60%" stop-color="#ff405b" />
-                            <stop offset="100%" stop-color="#9e001f" />
+                            <stop offset="60%" stop-color="#EF4444" />
+                            <stop offset="100%" stop-color="#991B1B" />
                         </linearGradient>
                         <linearGradient id="opAuxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#e5092f" />
+                            <stop offset="0%" stop-color="#DC2626" />
                             <stop offset="100%" stop-color="#ffffff" />
                         </linearGradient>
                         <filter id="opGlow" x="-30%" y="-30%" width="160%" height="160%">
@@ -1291,9 +1531,9 @@
 
                     <g id="op-needleGroup" class="needle-transition" style="transform: rotate(-122deg)">
                         <path d="M173.4 192 L174.4 42 L175.6 42 L176.6 192 Z" fill="#ffffff" filter="url(#opGlow)" />
-                        <path d="M174.3 175 L175 48 L175.7 175 Z" fill="#ff405b" />
-                        <circle cx="175" cy="175" r="9.5" fill="#0b0c10" stroke="rgba(255,255,255,.22)" stroke-width="1.5" />
-                        <circle cx="175" cy="175" r="5.5" fill="#e5092f" />
+                        <path d="M174.3 175 L175 48 L175.7 175 Z" fill="#EF4444" />
+                        <circle cx="175" cy="175" r="9.5" fill="#050506" stroke="rgba(255,255,255,.25)" stroke-width="1.5" />
+                        <circle cx="175" cy="175" r="5.5" fill="#DC2626" />
                         <circle cx="175" cy="175" r="2" fill="#ffffff" />
                     </g>
                 </svg>
@@ -1350,10 +1590,15 @@
             <div class="circle-outer-ring"></div>
             <svg id="circle-menu-svg" viewBox="-260 -260 520 520" class="glow-chrome" role="group" aria-label="Menu items">
                 <defs>
+                    <linearGradient id="obsidianSliceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0D0D10" />
+                        <stop offset="55%" stop-color="#050506" />
+                        <stop offset="100%" stop-color="#000000" />
+                    </linearGradient>
                     <linearGradient id="merahPutihGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#ef4444" />
-                        <stop offset="65%" stop-color="#dc2626" />
-                        <stop offset="100%" stop-color="#991b1b" />
+                        <stop offset="0%" stop-color="#EF4444" />
+                        <stop offset="55%" stop-color="#DC2626" />
+                        <stop offset="100%" stop-color="#991B1B" />
                     </linearGradient>
                 </defs>
                 <g id="circle-slices-group"></g>
@@ -1372,13 +1617,13 @@
             <svg id="hex-connector-svg" viewBox="0 0 540 540" aria-hidden="true">
                 <defs>
                     <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#ef4444" stop-opacity=".9" />
-                        <stop offset="50%" stop-color="#ffffff" stop-opacity=".65" />
-                        <stop offset="100%" stop-color="#dc2626" stop-opacity=".35" />
+                        <stop offset="0%" stop-color="#EF4444" stop-opacity=".95" />
+                        <stop offset="50%" stop-color="#ffffff" stop-opacity=".7" />
+                        <stop offset="100%" stop-color="#991B1B" stop-opacity=".4" />
                     </linearGradient>
                 </defs>
-                <circle cx="270" cy="270" r="190" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.2" stroke-dasharray="6 8" />
-                <polygon id="hex-outer-polygon" fill="none" stroke="rgba(239,68,68,0.18)" stroke-width="1" />
+                <circle cx="270" cy="270" r="190" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" stroke-dasharray="6 8" />
+                <polygon id="hex-outer-polygon" fill="none" stroke="rgba(239,68,68,0.22)" stroke-width="1" />
                 <g id="hex-connector-lines"></g>
             </svg>
             <div id="hex-nodes-container"></div>
@@ -1414,56 +1659,59 @@
         <div class="settings-card">
             <div class="flex items-center justify-between gap-3 border-b border-white/15 pb-4 mb-4">
                 <div class="flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/40 bg-red-600 text-white shadow-lg shadow-red-600/30">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/30 bg-gradient-to-br from-[#DC2626] to-[#991B1B] text-white shadow-md">
                         <i class="fa-solid fa-sliders text-lg"></i>
                     </span>
                     <div>
-                        <h3 class="settings-title uppercase">RADIAL <span class="text-red-500">SETTINGS</span></h3>
-                        <p class="mt-1 text-[10px] font-semibold tracking-wider text-white/55">TEMA MERAH PUTIH EDITION</p>
+                        <h3 class="settings-title uppercase">RADIAL <span class="text-[#EF4444]">SETTINGS</span></h3>
+                        <p class="mt-1 flex items-center gap-1.5 text-[10px] font-semibold tracking-wider text-white/65">
+                            <span class="w-1.5 h-1.5 rotate-45 bg-[#EF4444] inline-block"></span>
+                            OBSIDIAN RED EDITION
+                        </p>
                     </div>
                 </div>
-                <button type="button" onclick="closeSettingsModal()" class="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition hover:bg-red-600/20 hover:text-white" aria-label="Tutup pengaturan">
-                    <i class="fa-solid fa-xmark text-xl"></i>
+                <button type="button" onclick="closeSettingsModal()" class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white/70 transition hover:border-white/30 hover:bg-[#DC2626] hover:text-white" aria-label="Tutup pengaturan">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <div class="mb-3 text-[10px] font-extrabold tracking-[.16em] text-white/50">PILIH TATA LETAK MENU</div>
+            <div class="mb-3 text-[10px] font-extrabold tracking-[.16em] text-white/55">PILIH TATA LETAK MENU</div>
             <div class="space-y-2.5">
                 <button type="button" onclick="selectShape('circle')" id="opt-shape-circle" class="shape-option active">
                     <span class="flex items-center gap-3">
-                        <i class="fa-solid fa-circle-notch w-6 text-center text-xl text-red-500"></i>
+                        <i class="fa-solid fa-circle-notch w-6 text-center text-xl text-[#EF4444]"></i>
                         <span>
                             <span class="shape-option-title block">Classic Circle</span>
                             <span class="shape-option-desc block">Menu melingkar presisi dengan sektor radial.</span>
                         </span>
                     </span>
-                    <i class="status-indicator fa-solid fa-circle-check text-red-500"></i>
+                    <i class="status-indicator fa-solid fa-circle-check text-[#EF4444]"></i>
                 </button>
                 <button type="button" onclick="selectShape('hexagon')" id="opt-shape-hexagon" class="shape-option">
                     <span class="flex items-center gap-3">
-                        <i class="fa-solid fa-cubes-stacked w-6 text-center text-xl text-red-500"></i>
+                        <i class="fa-solid fa-cubes-stacked w-6 text-center text-xl text-[#EF4444]"></i>
                         <span>
                             <span class="shape-option-title block">Sci-Fi Hexagon</span>
                             <span class="shape-option-desc block">Node heksagonal simetris dengan garis konektor.</span>
                         </span>
                     </span>
-                    <i class="status-indicator fa-solid fa-circle-check hidden text-red-500"></i>
+                    <i class="status-indicator fa-solid fa-circle-check hidden text-[#EF4444]"></i>
                 </button>
                 <button type="button" onclick="selectShape('arc')" id="opt-shape-arc" class="shape-option">
                     <span class="flex items-center gap-3">
-                        <i class="fa-solid fa-grip w-6 text-center text-xl text-red-500"></i>
+                        <i class="fa-solid fa-grip w-6 text-center text-xl text-[#EF4444]"></i>
                         <span>
                             <span class="shape-option-title block">Floating Dock</span>
                             <span class="shape-option-desc block">Kartu melengkung elegan &amp; grid rapi di layar kecil.</span>
                         </span>
                     </span>
-                    <i class="status-indicator fa-solid fa-circle-check hidden text-red-500"></i>
+                    <i class="status-indicator fa-solid fa-circle-check hidden text-[#EF4444]"></i>
                 </button>
             </div>
 
             <div class="mt-5 border-t border-white/15 pt-4">
                 <div class="mb-3 flex items-center justify-between gap-2">
-                    <span class="text-[10px] font-extrabold tracking-[.16em] text-white/50">SPEEDOMETER</span>
+                    <span class="text-[10px] font-extrabold tracking-[.16em] text-white/55">SPEEDOMETER</span>
                     <button type="button" onclick="toggleSpeedoDrag()" id="btn-speedo-drag" class="settings-toggle">GESER</button>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
@@ -1471,7 +1719,7 @@
                     <button type="button" onclick="setSpeedoStyle('onepod')" id="opt-speedo-onepod" class="spu-chip"><i class="fa-solid fa-gauge"></i><span>1 POD</span></button>
                     <button type="button" onclick="setSpeedoStyle('off')" id="opt-speedo-off" class="spu-chip"><i class="fa-solid fa-eye-slash"></i><span>OFF</span></button>
                 </div>
-                <div class="mb-2 mt-4 text-[10px] font-extrabold tracking-[.16em] text-white/50">POSISI HUD</div>
+                <div class="mb-2 mt-4 text-[10px] font-extrabold tracking-[.16em] text-white/55">POSISI HUD</div>
                 <div class="spu-pos-grid" id="spu-pos-grid">
                     <button type="button" class="spu-pos" data-pos="top-left" onclick="setSpeedoPosition('top-left')" aria-label="Kiri atas"></button>
                     <button type="button" class="spu-pos" data-pos="top-center" onclick="setSpeedoPosition('top-center')" aria-label="Tengah atas"></button>
@@ -1483,22 +1731,36 @@
                     <button type="button" class="spu-pos" data-pos="bottom-center" onclick="setSpeedoPosition('bottom-center')" aria-label="Tengah bawah"></button>
                     <button type="button" class="spu-pos" data-pos="bottom-right" onclick="setSpeedoPosition('bottom-right')" aria-label="Kanan bawah"></button>
                 </div>
-                <div class="mb-2 mt-4 flex items-center justify-between text-[10px] font-extrabold tracking-[.16em] text-white/50">
-                    <span>UKURAN HUD</span><output id="speedo-size-value">100%</output>
+                <div class="mb-2 mt-4 flex items-center justify-between text-[10px] font-extrabold tracking-[.16em] text-white/55">
+                    <span>UKURAN HUD</span>
+                    <div class="flex items-center gap-2">
+                        <output id="speedo-size-value" class="text-white">100%</output>
+                        <button type="button" onclick="setSpeedoScale(1)" class="text-[9px] font-bold text-[#EF4444] hover:underline">DEFAULT</button>
+                    </div>
                 </div>
-                <input id="speedo-size" type="range" min="60" max="140" step="5" value="100" oninput="setSpeedoScale(this.value / 100)" class="w-full accent-red-500" aria-label="Ukuran speedometer">                <div class="mt-3 flex items-center justify-between gap-3">
-                    <span class="text-[10px] font-medium leading-tight text-white/45">Aktifkan GESER lalu tarik HUD untuk mengatur posisi bebas.</span>
+                <div class="flex items-center gap-2.5">
+                    <button type="button" onclick="stepSpeedoScale(-0.05)" class="size-stepper-btn" title="Perkecil ukuran" aria-label="Perkecil ukuran">
+                        <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <input id="speedo-size" type="range" min="50" max="150" step="5" value="100" oninput="setSpeedoScale(this.value / 100)" class="flex-1 accent-[#DC2626] cursor-pointer" aria-label="Ukuran speedometer">
+                    <button type="button" onclick="stepSpeedoScale(0.05)" class="size-stepper-btn" title="Perbesar ukuran" aria-label="Perbesar ukuran">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                </div>
+                <div class="mt-3 flex items-center justify-between gap-3">
+                    <span class="text-[10px] font-medium leading-tight text-white/50">Klik GESER untuk tarik HUD bebas, gunakan +/− atau cubit layar untuk atur ukuran.</span>
                     <button type="button" onclick="resetSpeedoOffset()" class="settings-toggle off px-3">RESET</button>
                 </div>
             </div>
 
             <div class="mt-5 flex items-center justify-between border-t border-white/15 pt-4">
-                <span class="font-rajdhani text-sm font-bold tracking-wide text-white">SOUND EFFECT</span>
+                <span class="font-display text-sm font-bold tracking-wide text-white">SOUND EFFECT</span>
                 <button type="button" onclick="toggleAudio()" id="btn-audio-toggle" class="settings-toggle">ON</button>
             </div>
             <button type="button" onclick="closeSettingsModal()" class="settings-action mt-5">SIMPAN &amp; KEMBALI</button>
         </div>
     </div>
+
     <script>
         const menuItems = [
             { id: 'phone',     title: 'Phone',     icon: 'fa-mobile-screen-button', cmd: '/phone' },
@@ -1713,9 +1975,13 @@
             radialClosed = true;
             currentMenu = 'main';
 
+            if (typeof window.setSpeedoDragging === 'function') {
+                window.setSpeedoDragging(false);
+            }
+
             const settingsPanel = document.getElementById('inline-settings-panel');
             if (settingsPanel) {
-                settingsPanel.classList.remove('is-open');
+                settingsPanel.classList.remove('is-open', 'is-hud-editing');
                 settingsPanel.setAttribute('aria-hidden', 'true');
             }
 
@@ -1735,14 +2001,14 @@
         window.RadialMenu.open = openRadialMenu;
         window.RadialMenu.close = closeRadialMenu;
         window.openRadialMenu = openRadialMenu;
-        window.closeRadialMenu = closeRadialMenu;        if (window.cef && typeof window.cef.on === 'function') {
+        window.closeRadialMenu = closeRadialMenu;
+        if (window.cef && typeof window.cef.on === 'function') {
             try {
                 window.cef.on('radial_open', () => openRadialMenu());
             } catch (error) {
                 console.warn('[RadialMenu] radial_open listener unavailable:', error);
             }
         }
-
 
         function createArcPath(x, y, innerRadius, outerRadius, startAngle, endAngle) {
             const startRad = startAngle * Math.PI / 180;
@@ -1807,7 +2073,7 @@
                 foreign.setAttribute('width', '100');
                 foreign.setAttribute('height', '68');
                 foreign.setAttribute('class', 'slice-fo');
-                const labelSize = item.title.length > 8 ? '10.5px' : '12px';
+                const labelSize = item.title.length > 8 ? '10px' : '11.5px';
                 foreign.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="slice-content"><i class="fa-solid ${item.icon}"></i><span style="font-size:${labelSize}">${item.title}</span></div>`;
 
                 groupNode.appendChild(path);
@@ -1820,7 +2086,6 @@
         }
 
         /* ==================== HEXAGON POSITIONING ==================== */
-        // Ukuran node per jumlah item agar cincin heksagon tetap simetris & tidak bertumpuk
         const HEX_NODE_PERCENT = { 4: 25, 5: 22.5, 6: 22.5, 8: 19.5 };
 
         function renderHexagonMenu() {
@@ -1838,7 +2103,6 @@
             layout.classList.remove('hex-count-4', 'hex-count-5', 'hex-count-6');
             if ([4, 5, 6].includes(total)) layout.classList.add(`hex-count-${total}`);
 
-            // Geometri SVG 540x540 -> persentase agar CSS & garis konektor selalu sejajar
             const svgCenter = 270;
             const svgRadius = 190;
             const radiusPercent = (svgRadius / 540) * 100;
@@ -1957,14 +2221,18 @@
 
         function openSettingsModal() {
             const modal = document.getElementById('inline-settings-panel');
+            modal.classList.remove('is-hud-editing');
             modal.classList.add('is-open');
             modal.setAttribute('aria-hidden', 'false');
             updateSettingsUI();
         }
 
         function closeSettingsModal() {
+            if (typeof window.setSpeedoDragging === 'function') {
+                window.setSpeedoDragging(false);
+            }
             const modal = document.getElementById('inline-settings-panel');
-            modal.classList.remove('is-open');
+            modal.classList.remove('is-open', 'is-hud-editing');
             modal.setAttribute('aria-hidden', 'true');
         }
 
@@ -2006,16 +2274,23 @@
         function setupKeyListeners() {
             window.addEventListener('keydown', event => {
                 if (radialClosed) return;
+                const speedoLayer = document.getElementById('speedo-layer');
+                const hudEditing = speedoLayer && speedoLayer.classList.contains('is-dragging');
                 const modal = document.getElementById('inline-settings-panel');
                 const modalOpen = modal && modal.classList.contains('is-open');
                 if (event.key === 'Escape') {
                     event.preventDefault();
                     event.stopPropagation();
-                    if (modalOpen) closeSettingsModal();
-                    else handleCenterClick();
+                    if (hudEditing && typeof window.setSpeedoDragging === 'function') {
+                        window.setSpeedoDragging(false);
+                    } else if (modalOpen) {
+                        closeSettingsModal();
+                    } else {
+                        handleCenterClick();
+                    }
                     return;
                 }
-                if (modalOpen) return;
+                if (modalOpen || hudEditing) return;
                 if (event.key === 'Tab') {
                     event.preventDefault();
                     const shapes = ['circle', 'hexagon', 'arc'];
@@ -2061,9 +2336,13 @@
             if (!layer) return;
 
             const STORAGE_KEY = 'radial-speedometer-settings';
+            const MIN_SCALE = 0.5;
+            const MAX_SCALE = 1.5;
             const DEFAULTS = { style: 'twopod', position: 'bottom-right', dx: 0, dy: 0, scale: 1 };
             const POSITIONS = ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right'];
             let cfg = Object.assign({}, DEFAULTS);
+
+            const clampScale = value => Math.min(Math.max(Number(value) || 1, MIN_SCALE), MAX_SCALE);
 
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
@@ -2074,7 +2353,7 @@
                         if (POSITIONS.includes(saved.position)) cfg.position = saved.position;
                         cfg.dx = Number(saved.dx) || 0;
                         cfg.dy = Number(saved.dy) || 0;
-                        cfg.scale = Math.min(Math.max(Number(saved.scale) || 1, .6), 1.4);
+                        cfg.scale = clampScale(saved.scale);
                     }
                 }
             } catch (error) {
@@ -2148,7 +2427,7 @@
                     line.setAttribute('y1', (cy + Math.sin(angle) * rIn).toFixed(2));
                     line.setAttribute('x2', (cx + Math.cos(angle) * rOut).toFixed(2));
                     line.setAttribute('y2', (cy + Math.sin(angle) * rOut).toFixed(2));
-                    line.setAttribute('stroke', i >= redFrom ? '#ff405b' : (major ? '#ffffff' : '#6f7480'));
+                    line.setAttribute('stroke', i >= redFrom ? '#EF4444' : (major ? '#ffffff' : '#6f7480'));
                     line.setAttribute('stroke-width', major ? 2.3 : 1.2);
                     line.setAttribute('opacity', major ? '1' : '.8');
                     container.appendChild(line);
@@ -2183,7 +2462,7 @@
                     line.setAttribute('y1', 175 + Math.sin(angle) * r1);
                     line.setAttribute('x2', 175 + Math.cos(angle) * r2);
                     line.setAttribute('y2', 175 + Math.sin(angle) * r2);
-                    line.setAttribute('stroke', i >= 10 ? '#ff405b' : (major ? '#ffffff' : '#7d808a'));
+                    line.setAttribute('stroke', i >= 10 ? '#EF4444' : (major ? '#ffffff' : '#7d808a'));
                     line.setAttribute('stroke-width', major ? 2.6 : 1.4);
                     line.setAttribute('stroke-linecap', 'round');
                     container.appendChild(line);
@@ -2291,9 +2570,9 @@
             }
 
             function applyOffset() {
-                layer.style.setProperty('--sp-dx', cfg.dx + 'px');
-                layer.style.setProperty('--sp-dy', cfg.dy + 'px');
-                layer.style.setProperty('--sp-scale', cfg.scale);
+                layer.style.setProperty('--sp-dx', cfg.dx.toFixed(1) + 'px');
+                layer.style.setProperty('--sp-dy', cfg.dy.toFixed(1) + 'px');
+                layer.style.setProperty('--sp-scale', cfg.scale.toFixed(3));
             }
 
             function clampOffset() {
@@ -2301,14 +2580,21 @@
                 const element = activeVariant();
                 if (!element) return;
                 const pad = 8;
+                const portraitRotated = window.matchMedia && window.matchMedia('(orientation: portrait)').matches;
+                const maxW = portraitRotated ? window.innerHeight : window.innerWidth;
+                const maxH = portraitRotated ? window.innerWidth : window.innerHeight;
                 for (let pass = 0; pass < 3; pass++) {
                     const rect = element.getBoundingClientRect();
+                    const left = portraitRotated ? rect.top : rect.left;
+                    const right = portraitRotated ? rect.bottom : rect.right;
+                    const top = portraitRotated ? (window.innerWidth - rect.right) : rect.top;
+                    const bottom = portraitRotated ? (window.innerWidth - rect.left) : rect.bottom;
                     let adjustX = 0;
                     let adjustY = 0;
-                    if (rect.left < pad) adjustX = pad - rect.left;
-                    else if (rect.right > window.innerWidth - pad) adjustX = (window.innerWidth - pad) - rect.right;
-                    if (rect.top < pad) adjustY = pad - rect.top;
-                    else if (rect.bottom > window.innerHeight - pad) adjustY = (window.innerHeight - pad) - rect.bottom;
+                    if (left < pad) adjustX = pad - left;
+                    else if (right > maxW - pad) adjustX = (maxW - pad) - right;
+                    if (top < pad) adjustY = pad - top;
+                    else if (bottom > maxH - pad) adjustY = (maxH - pad) - bottom;
                     if (!adjustX && !adjustY) break;
                     cfg.dx = Math.round(cfg.dx + adjustX);
                     cfg.dy = Math.round(cfg.dy + adjustY);
@@ -2320,7 +2606,7 @@
 
             function emitSettings() {
                 if (applyingRemoteSettings) return;
-                const payload = { style: cfg.style, position: cfg.position, scale: cfg.scale, dx: cfg.dx, dy: cfg.dy };
+                const payload = { style: cfg.style, position: cfg.position, scale: Number(cfg.scale.toFixed(2)), dx: Math.round(cfg.dx), dy: Math.round(cfg.dy) };
                 try {
                     if (typeof emitClientEvent === 'function') {
                         emitClientEvent('setSpeedometerSettings', JSON.stringify(payload));
@@ -2356,10 +2642,13 @@
                 document.querySelectorAll('.spu-pos').forEach(button => {
                     button.classList.toggle('active', button.dataset.pos === cfg.position);
                 });
+                const pct = Math.round(cfg.scale * 100) + '%';
                 const sizeInput = $('speedo-size');
                 const sizeValue = $('speedo-size-value');
+                const toolbarReadout = $('sp-drag-scale-readout');
                 if (sizeInput) sizeInput.value = Math.round(cfg.scale * 100);
-                if (sizeValue) sizeValue.textContent = Math.round(cfg.scale * 100) + '%';
+                if (sizeValue) sizeValue.textContent = pct;
+                if (toolbarReadout) toolbarReadout.textContent = pct;
                 const dragButton = $('btn-speedo-drag');
                 if (dragButton) {
                     const dragging = layer.classList.contains('is-dragging');
@@ -2375,10 +2664,10 @@
                 try {
                     if (['twopod', 'onepod', 'off'].includes(data.style)) cfg.style = data.style;
                     if (POSITIONS.includes(data.position)) cfg.position = data.position;
-                    if (Number.isFinite(Number(data.scale))) cfg.scale = Math.min(Math.max(Number(data.scale), .6), 1.4);
+                    if (Number.isFinite(Number(data.scale))) cfg.scale = clampScale(data.scale);
                     if (Number.isFinite(Number(data.dx))) cfg.dx = Number(data.dx);
                     if (Number.isFinite(Number(data.dy))) cfg.dy = Number(data.dy);
-                    if (cfg.style === 'off') layer.classList.remove('is-dragging');
+                    if (cfg.style === 'off') window.setSpeedoDragging(false);
                     applySettings();
                     renderSpeedometer();
                 } finally {
@@ -2388,15 +2677,19 @@
             window.setSpeedoScale = function (scale) {
                 const next = Number(scale);
                 if (!Number.isFinite(next)) return;
-                cfg.scale = Math.min(Math.max(next, .6), 1.4);
+                cfg.scale = clampScale(next);
                 applySettings();
                 renderSpeedometer();
                 saveSettings();
             };
+            window.stepSpeedoScale = function (delta) {
+                const next = Math.round((cfg.scale + Number(delta)) * 100) / 100;
+                window.setSpeedoScale(next);
+            };
             window.setSpeedoStyle = function (style) {
                 if (!['twopod', 'onepod', 'off'].includes(style)) return;
                 cfg.style = style;
-                if (style === 'off') layer.classList.remove('is-dragging');
+                if (style === 'off') window.setSpeedoDragging(false);
                 applySettings();
                 renderSpeedometer();
                 saveSettings();
@@ -2411,12 +2704,20 @@
                 saveSettings();
             };
 
-            window.toggleSpeedoDrag = function () {
-                if (cfg.style === 'off') return;
-                const dragging = !layer.classList.contains('is-dragging');
+            window.setSpeedoDragging = function (active) {
+                const dragging = Boolean(active) && cfg.style !== 'off';
                 layer.classList.toggle('is-dragging', dragging);
                 layer.classList.toggle('speedo-settings-preview', dragging);
+                const settingsPanel = $('inline-settings-panel');
+                if (settingsPanel && settingsPanel.classList.contains('is-open')) {
+                    settingsPanel.classList.toggle('is-hud-editing', dragging);
+                }
                 updateSettingsUI();
+            };
+
+            window.toggleSpeedoDrag = function () {
+                if (cfg.style === 'off') return;
+                window.setSpeedoDragging(!layer.classList.contains('is-dragging'));
             };
 
             window.resetSpeedoOffset = function () {
@@ -2426,34 +2727,125 @@
                 saveSettings();
             };
 
-            /* ---------- Geser bebas (drag) ---------- */
+            /* ---------- Geser bebas halus (60fps RAF + multi-touch pinch zoom) ---------- */
+            const pointers = new Map();
             let drag = null;
+            let pinch = null;
+            let dragRaf = null;
+            let pendingDx = cfg.dx;
+            let pendingDy = cfg.dy;
+
+            function toLogicalDelta(rawDx, rawDy) {
+                const portraitRotated = window.matchMedia && window.matchMedia('(orientation: portrait)').matches;
+                return portraitRotated
+                    ? { dx: rawDy, dy: -rawDx }
+                    : { dx: rawDx, dy: rawDy };
+            }
+
+            function scheduleDragRender() {
+                if (dragRaf) return;
+                dragRaf = requestAnimationFrame(() => {
+                    cfg.dx = pendingDx;
+                    cfg.dy = pendingDy;
+                    applyOffset();
+                    dragRaf = null;
+                });
+            }
+
+            function getPinchDistance() {
+                const pts = Array.from(pointers.values());
+                if (pts.length < 2) return 0;
+                return Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+            }
 
             layer.addEventListener('pointerdown', event => {
                 if (!layer.classList.contains('is-dragging')) return;
+                const toolbar = $('speedo-drag-toolbar');
+                if (toolbar && toolbar.contains(event.target)) return;
                 const element = activeVariant();
                 if (!element || !element.contains(event.target)) return;
-                drag = { id: event.pointerId, startX: event.clientX, startY: event.clientY, baseX: cfg.dx, baseY: cfg.dy };
+
+                pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
                 try { element.setPointerCapture(event.pointerId); } catch (error) { /* diabaikan */ }
+
+                if (pointers.size === 1) {
+                    drag = { id: event.pointerId, startX: event.clientX, startY: event.clientY, baseX: cfg.dx, baseY: cfg.dy };
+                    pinch = null;
+                    element.classList.add('is-active-drag');
+                } else if (pointers.size === 2) {
+                    drag = null;
+                    pinch = { startDist: getPinchDistance(), baseScale: cfg.scale };
+                }
                 event.preventDefault();
             });
 
             layer.addEventListener('pointermove', event => {
-                if (!drag || drag.id !== event.pointerId) return;
-                cfg.dx = Math.round(drag.baseX + (event.clientX - drag.startX));
-                cfg.dy = Math.round(drag.baseY + (event.clientY - drag.startY));
-                applyOffset();
-                event.preventDefault();
+                if (!pointers.has(event.pointerId)) return;
+                pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+                if (pinch && pointers.size >= 2) {
+                    const dist = getPinchDistance();
+                    if (pinch.startDist > 0 && dist > 0) {
+                        cfg.scale = clampScale(pinch.baseScale * (dist / pinch.startDist));
+                        applyOffset();
+                        updateSettingsUI();
+                    }
+                    event.preventDefault();
+                    return;
+                }
+
+                if (drag && drag.id === event.pointerId) {
+                    const delta = toLogicalDelta(event.clientX - drag.startX, event.clientY - drag.startY);
+                    pendingDx = drag.baseX + delta.dx;
+                    pendingDy = drag.baseY + delta.dy;
+                    scheduleDragRender();
+                    event.preventDefault();
+                }
             });
 
-            function endDrag(event) {
-                if (!drag || drag.id !== event.pointerId) return;
-                drag = null;
-                clampOffset();
-                saveSettings();
+            function endPointer(event) {
+                if (!pointers.has(event.pointerId)) return;
+                pointers.delete(event.pointerId);
+                const element = activeVariant();
+
+                if (pointers.size < 2 && pinch) {
+                    pinch = null;
+                    clampOffset();
+                    saveSettings();
+                }
+
+                if (drag && drag.id === event.pointerId) {
+                    if (dragRaf) {
+                        cancelAnimationFrame(dragRaf);
+                        dragRaf = null;
+                        cfg.dx = pendingDx;
+                        cfg.dy = pendingDy;
+                    }
+                    cfg.dx = Math.round(cfg.dx);
+                    cfg.dy = Math.round(cfg.dy);
+                    drag = null;
+                    if (element) element.classList.remove('is-active-drag');
+                    applyOffset();
+                    clampOffset();
+                    saveSettings();
+                }
+
+                if (pointers.size === 1) {
+                    const [remainingId, pt] = pointers.entries().next().value;
+                    drag = { id: remainingId, startX: pt.x, startY: pt.y, baseX: cfg.dx, baseY: cfg.dy };
+                }
             }
-            layer.addEventListener('pointerup', endDrag);
-            layer.addEventListener('pointercancel', endDrag);
+            layer.addEventListener('pointerup', endPointer);
+            layer.addEventListener('pointercancel', endPointer);
+
+            /* ---------- Scroll wheel untuk ubah ukuran saat mode GESER aktif ---------- */
+            layer.addEventListener('wheel', event => {
+                if (!layer.classList.contains('is-dragging')) return;
+                const element = activeVariant();
+                if (!element || !element.contains(event.target)) return;
+                event.preventDefault();
+                window.stepSpeedoScale(event.deltaY < 0 ? 0.05 : -0.05);
+            }, { passive: false });
 
             /* ---------- Pratinjau data kendaraan ---------- */
             const previewEnabled = new URLSearchParams(location.search).get('preview') !== '0';
@@ -2504,7 +2896,8 @@
             }
             window.addEventListener('speedometer_update', event => onSpeedometerUpdate(event.detail));
         })();
-    </script>    <script>
+    </script>
+    <script>
         (function () {
             function applyRemoteSpeedometerSettings(payload) {
                 let data = payload;
@@ -2521,5 +2914,6 @@
             }
             window.addEventListener('speedometer_settings', event => applyRemoteSpeedometerSettings(event.detail));
         })();
-    </script></body>
+    </script>
+</body>
 </html>
