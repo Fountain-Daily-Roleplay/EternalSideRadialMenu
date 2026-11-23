@@ -57,7 +57,7 @@
         html, body { width: 100%; height: 100%; margin: 0; }
         body {
             overflow: hidden;
-            background-color: #050506;
+            background-color: #121216;
             color: var(--white);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             user-select: none;
@@ -77,6 +77,35 @@
             visibility: hidden !important;
             opacity: 0 !important;
             pointer-events: none !important;
+        }
+
+
+        /* Optimasi khusus embedded CEF/WebView dalam game */
+        body.cef-transparent .hud-overlay,
+        body.cef-transparent .hud-grid { display: none !important; }
+
+        body.cef-transparent .slice-path,
+        body.cef-transparent .hex-node,
+        body.cef-transparent .arc-item,
+        body.cef-transparent .center-hub,
+        body.cef-transparent .center-hub-logo {
+            filter: none !important;
+            transition-duration: .08s !important;
+        }
+
+        body.cef-transparent .center-hub,
+        body.cef-transparent .hex-center-hub,
+        body.cef-transparent .arc-item,
+        body.cef-transparent .arc-close-button {
+            box-shadow: none !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
         }
 
         button, [role="button"], .slice-group,
@@ -112,7 +141,7 @@
             inset: 0;
             pointer-events: none;
             background:
-                radial-gradient(circle at center, rgba(220, 38, 38, .16) 0%, rgba(255, 255, 255, .03) 26%, rgba(5, 5, 6, .68) 55%, rgba(0, 0, 0, .92) 100%);
+                radial-gradient(circle at center, rgba(220, 38, 38, .16) 0%, rgba(255, 255, 255, .03) 26%, rgba(5, 5, 6, .28) 55%, rgba(0, 0, 0, .48) 100%);
         }
         .hud-grid {
             position: fixed;
@@ -139,12 +168,13 @@
         }
 
         /* Animasi untuk wadah layout (tidak dipakai pada item yang butuh translate posisi) */
-        .menu-enter { animation: menuEnter .24s cubic-bezier(.16, 1, .3, 1) both; }
+        .menu-enter { animation: menuEnter .14s ease-out both; }
         @keyframes menuEnter {
-            from { opacity: 0; transform: scale(.95); filter: blur(3px); }
-            to { opacity: 1; transform: scale(1); filter: blur(0); }
+            from { opacity: .75; transform: scale(.985); }
+            to { opacity: 1; transform: scale(1); }
         }
-        .soft-pulse { animation: softPulse 3s ease-in-out infinite; }
+        /* Tidak ada animasi glow/pulse terus-menerus saat menu terbuka. */
+        .soft-pulse { animation: none !important; }
         @keyframes softPulse {
             0%, 100% {
                 box-shadow:
@@ -180,7 +210,7 @@
             inset: 0.5%;
             border: 1.5px solid rgba(239, 68, 68, .48);
             border-radius: 50%;
-            box-shadow: 0 0 36px rgba(220, 38, 38, .2), inset 0 1px 0 rgba(255, 255, 255, .22);
+            box-shadow: 0 0 12px rgba(220, 38, 38, .12);
             pointer-events: none;
         }
         .circle-outer-ring::before {
@@ -210,7 +240,7 @@
             fill: url(#merahPutihGradient);
             stroke: #ffffff;
             stroke-width: 2;
-            filter: drop-shadow(0 0 16px rgba(239, 68, 68, .65));
+            filter: none;
         }
         .slice-group:active .slice-path { fill: #991B1B; }
         .slice-fo { pointer-events: none; }
@@ -229,7 +259,7 @@
         .slice-content i {
             font-size: clamp(16px, 2.7vw, 22px);
             color: #EF4444;
-            filter: drop-shadow(0 2px 8px rgba(239, 68, 68, .45));
+            filter: none;
             transition: color .18s ease, transform .18s ease, filter .18s ease;
         }
         .slice-group:hover .slice-content,
@@ -270,7 +300,7 @@
             background:
                 radial-gradient(circle at 50% 0%, rgba(220, 38, 38, .45) 0%, transparent 58%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px),
-                linear-gradient(145deg, #0D0D10 0%, #050506 58%, #000000 100%);
+                linear-gradient(145deg, #19191E 0%, #050506 58%, #000000 100%);
             box-shadow:
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
                 inset 0 -1px 0 0 rgba(220, 38, 38, 0.35),
@@ -370,7 +400,7 @@
             color: #fff;
             cursor: pointer;
             transform: translate(-50%, -50%);
-            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .88));
+            filter: none;
             transition: transform .18s ease, filter .18s ease, background .18s ease;
             animation: hexNodeEnter .26s cubic-bezier(.16, 1, .3, 1);
         }
@@ -381,7 +411,7 @@
         .hex-node:hover, .hex-node:focus-visible {
             transform: translate(-50%, -50%) scale(1.08);
             background: linear-gradient(150deg, #ffffff 0%, #EF4444 100%);
-            filter: drop-shadow(0 12px 26px rgba(0, 0, 0, .85)) drop-shadow(0 0 16px rgba(239, 68, 68, .65));
+            filter: none;
         }
         .hex-node:active { transform: translate(-50%, -50%) scale(.97); }
         .hex-node-inner {
@@ -395,9 +425,9 @@
             padding: 4px;
             overflow: hidden;
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-            background-color: #050506;
+            background-color: #121216;
             background-image:
-                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                linear-gradient(145deg, #19191E 0%, #050506 55%, #000000 100%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
             color: #fff;
             transition: background .18s ease, color .18s ease;
@@ -446,7 +476,7 @@
             padding: 2.5px;
             background: linear-gradient(150deg, #ffffff 0%, #EF4444 50%, #ffffff 100%);
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-            filter: drop-shadow(0 0 22px rgba(239, 68, 68, .55));
+            filter: none;
         }
         .hex-center-hub-inner {
             display: flex;
@@ -458,11 +488,11 @@
             gap: 4px;
             padding: 8px;
             clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-            background-color: #050506;
+            background-color: #121216;
             background-image:
                 radial-gradient(circle at 50% 0%, rgba(220, 38, 38, .48) 0%, transparent 60%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px),
-                linear-gradient(145deg, #0D0D10 0%, #050506 82%);
+                linear-gradient(145deg, #19191E 0%, #050506 82%);
         }
         .hex-center-hub .hub-logo-wrap { width: 54%; }
 
@@ -508,9 +538,9 @@
             padding: 8px 4px;
             border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 16px;
-            background-color: #050506;
+            background-color: #121216;
             background-image:
-                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                linear-gradient(145deg, #19191E 0%, #050506 55%, #000000 100%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
             box-shadow:
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
@@ -637,7 +667,7 @@
             padding: 8px 22px;
             border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 9999px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             color: #fff;
             overflow: hidden;
             box-shadow:
@@ -745,7 +775,7 @@
             padding: 7px 12px;
             border: 1px solid rgba(255, 255, 255, .28);
             border-radius: 9999px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             box-shadow:
                 inset 0 1px 0 0 rgba(255, 255, 255, .25),
                 0 12px 30px rgba(0, 0, 0, .92),
@@ -811,7 +841,7 @@
             flex: 0 0 30px;
             border: 1px solid rgba(255, 255, 255, .24);
             border-radius: 10px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             color: #fff;
             font: 800 14px/1 'Plus Jakarta Sans', sans-serif;
             cursor: pointer;
@@ -874,7 +904,7 @@
             gap: calc(var(--w) * .008);
             padding: calc(var(--w) * .009) calc(var(--w) * .018);
             border-radius: 999px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             border: 1px solid rgba(255, 255, 255, .25);
             box-shadow:
                 inset 0 1px 0 0 rgba(255, 255, 255, .22),
@@ -909,9 +939,9 @@
             gap: calc(var(--w) * .02);
             padding: 0 calc(var(--w) * .028);
             border-radius: 16px;
-            background-color: #050506;
+            background-color: #121216;
             background-image:
-                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                linear-gradient(145deg, #19191E 0%, #050506 55%, #000000 100%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
             border: 1px solid rgba(255, 255, 255, .25);
             box-shadow:
@@ -957,7 +987,7 @@
             gap: calc(var(--w) * .017);
             padding: calc(var(--w) * .007) calc(var(--w) * .018);
             border-radius: 9999px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             border: 1px solid rgba(255, 255, 255, .2);
         }
         .twopod .status-icon { width: calc(var(--w) * .026); height: calc(var(--w) * .026); display: grid; place-items: center; color: rgba(255, 255, 255, .22); transition: color .2s, filter .2s; }
@@ -981,9 +1011,9 @@
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            background-color: #050506;
+            background-color: #121216;
             background-image:
-                radial-gradient(circle at 50% 25%, #0D0D10 0%, #050506 60%, #000000 100%),
+                radial-gradient(circle at 50% 25%, #19191E 0%, #050506 60%, #000000 100%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
             border: 1px solid rgba(255, 255, 255, .25);
             box-shadow:
@@ -1055,7 +1085,7 @@
             gap: 6px;
             padding: 3px 8px;
             border-radius: 9999px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             border: 1px solid rgba(255, 255, 255, .22);
         }
         .onepod .status-icon { width: 9.5px; height: 9.5px; display: grid; place-items: center; color: rgba(255, 255, 255, .24); transition: color .2s, filter .2s; }
@@ -1070,7 +1100,7 @@
             gap: 4px;
             padding: 3px 7px;
             border-radius: 9999px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             border: 1px solid rgba(255, 255, 255, .25);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 6px 14px rgba(0, 0, 0, .85);
             z-index: 3;
@@ -1090,7 +1120,7 @@
             padding: 11px 6px;
             border: 1px solid rgba(255, 255, 255, .22);
             border-radius: 12px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             color: #fff;
             font: 800 11.5px/1 'Plus Jakarta Sans', sans-serif;
             letter-spacing: .07em;
@@ -1114,7 +1144,7 @@
             place-items: center;
             border: 1px solid rgba(255, 255, 255, .22);
             border-radius: 12px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             color: rgba(255, 255, 255, .42);
             cursor: pointer;
             transition: all .18s ease;
@@ -1152,9 +1182,9 @@
             padding: clamp(18px, 4vw, 26px);
             border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 20px;
-            background-color: #050506;
+            background-color: #121216;
             background-image:
-                linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                linear-gradient(145deg, #19191E 0%, #050506 55%, #000000 100%),
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
             box-shadow:
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
@@ -1181,7 +1211,7 @@
             padding: 13px 14px;
             border: 1px solid rgba(255, 255, 255, .2);
             border-radius: 16px;
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, .14);
             text-align: left;
             cursor: pointer;
@@ -1225,7 +1255,7 @@
         }
         .settings-toggle.off {
             border-color: rgba(255, 255, 255, .22);
-            background: linear-gradient(180deg, #111114 0%, #050506 100%);
+            background: linear-gradient(180deg, #1B1B20 0%, #121216 100%);
             color: rgba(255, 255, 255, .65);
             box-shadow: none;
         }
@@ -1288,12 +1318,12 @@
             .hex-node:hover {
                 transform: translate(-50%, -50%);
                 background: linear-gradient(150deg, #EF4444 0%, rgba(255, 255, 255, .45) 52%, rgba(220, 38, 38, .35) 100%);
-                filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .88));
+                filter: none;
             }
             .hex-node:hover .hex-node-inner {
-                background-color: #050506;
+                background-color: #121216;
                 background-image:
-                    linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                    linear-gradient(145deg, #19191E 0%, #050506 55%, #000000 100%),
                     repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
                 color: #ffffff;
             }
@@ -1306,9 +1336,9 @@
                 z-index: 3;
                 transform: translateY(calc(var(--lift, 0px) * -1));
                 border-color: rgba(255, 255, 255, .25);
-                background-color: #050506;
+                background-color: #121216;
                 background-image:
-                    linear-gradient(145deg, #0D0D10 0%, #050506 55%, #000000 100%),
+                    linear-gradient(145deg, #19191E 0%, #050506 55%, #000000 100%),
                     repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
                 color: #ffffff;
                 box-shadow:
@@ -1805,10 +1835,13 @@
                 : { width: height, height: width };
         }
 
+        // Render hanya layout yang sedang dipakai. Ini menghindari pembuatan
+        // SVG/foreignObject dan node DOM untuk dua layout yang sedang tersembunyi.
         function renderAllMenus() {
-            renderCircleMenu();
-            renderHexagonMenu();
-            renderArcMenu();
+            if (currentShape === 'circle') renderCircleMenu();
+            else if (currentShape === 'hexagon') renderHexagonMenu();
+            else renderArcMenu();
+
             updateCenterHub();
             updateShapeVisibility();
         }
@@ -2190,8 +2223,9 @@
             playSound('select');
             updateShapeVisibility();
             updateSettingsUI();
-            if (shape === 'arc') renderArcMenu();
-            if (shape === 'hexagon') renderHexagonMenu();
+            if (shape === 'circle') renderCircleMenu();
+            else if (shape === 'hexagon') renderHexagonMenu();
+            else renderArcMenu();
         }
 
         function updateShapeVisibility() {
@@ -2204,8 +2238,7 @@
                 element.classList.toggle('hidden', shape !== currentShape);
                 if (shape === currentShape) {
                     element.classList.remove('menu-enter');
-                    void element.offsetWidth;
-                    element.classList.add('menu-enter');
+                    requestAnimationFrame(() => element.classList.add('menu-enter'));
                 }
             });
         }
@@ -2311,10 +2344,11 @@
 
         let resizeFrame = null;
         function refreshResponsiveMenus() {
+            if (radialClosed) return;
             if (resizeFrame) cancelAnimationFrame(resizeFrame);
             document.body.classList.add('is-resizing');
             resizeFrame = requestAnimationFrame(() => {
-                renderAllMenus();
+                if (!radialClosed) renderAllMenus();
                 requestAnimationFrame(() => document.body.classList.remove('is-resizing'));
                 resizeFrame = null;
             });
